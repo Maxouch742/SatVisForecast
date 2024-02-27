@@ -1,3 +1,39 @@
 # TODO des choses à faire pour le projet
 
-Salut les zouzous
+
+Matteo (MCO):
+=============
+- front
+- prototype
+- besoin set fictif [azimut/elev] -> donné par MFX
+- besoin [gisement/elev], triés en fonction du gisement du relief (tous les °) -> donné par FST
+
+
+
+
+
+
+
+Franck (FST):
+=============
+
+# Import json module
+import json
+reqTxt = """
+{
+	"positionMN95": [2600000,1200000] ,
+	"instrumentHeight": 1.87,
+	"elevationMask": 3.5
+}
+"""
+reqJSON = json.loads(reqTxt)
+
+
+
+
+
+Maxime (MFX):
+=============
+- prend un time (ex. 28.02.2024 14:35) et génère l'objet JSON (client) 
+
+	

@@ -1,0 +1,30 @@
+[
+    {
+        "time": "GPST",
+        "data": {
+    ],
+    "GNSS": [
+        {
+            "id",
+            "azi",
+            "elev"
+        },
+        {
+            "id",
+            "azi",
+            "elev"
+        },
+        {
+            "id",
+            "azi",
+            "elev"
+        },
+        {
+            "id",
+            "azi",
+            "elev"
+        },
+    ],
+}
+}
+]

@@ -18,6 +18,6 @@ function computePosition(orbits){
 
     for (let i=0; i<=orbits.length; i++){
         let year = 0;
-        i.EPOCH_YEAR = get
+        console.log(i);
     }
 }

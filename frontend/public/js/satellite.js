@@ -1,22 +1,23 @@
 /**
- * Import du fichier 'celestrak.txt' avec les définitions des orbites
- * pour chaque satellite
+ * Requête sur l'API de celestrak pour récupérer les éléments orbitaux
  */
 
-function importTLE() {
-    
-    // Read file
-    const reader = new FileReader();
+function import_TLE() {
 
-    reader.onload = function () {
-        const content = reader.result();
-        console.log(content);
-    };
+    url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=json";
 
-    reader.onerror = function () {
-        console.log("Oops: error reading the file");
-    };
+    getData(url)
+        .then(computePosition)
+        .catch(response => console.log(response));
 
-    reader.readAsText('celestrak.txt');
+}
 
+
+function computePosition(orbits){
+    console.log(orbits);
+
+    for (let i=0; i<=orbits.length; i++){
+        let year = 0;
+        i.EPOCH_YEAR = get
+    }
 }

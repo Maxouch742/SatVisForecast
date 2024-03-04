@@ -10,21 +10,10 @@
 <body>
 	<h1>Page test</h1>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-	<!-- <script src="js/satellite.js"></script> -->
+	<script src="js/satellite.js"></script>
+    <script src="js/request.js"></script>
     <script>
-        // importTLE();
-        async function getData(){
-            url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=json";
-            return await $.ajax({
-                url: url,
-                type: 'GET',
-                error: function (request, status, error){
-                    console.log(`Error : ${error}, status: ${status}`)
-                }
-            });
-        };
-
-        getData().then(response => console.log(response))
+        import_TLE();
     </script>
 </body>
 

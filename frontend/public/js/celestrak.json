@@ -1,0 +1,22 @@
+
+{
+    "constellation":"GPS",
+    "bloc":"BIIA-10",
+    "matricule":"PRN 32",
+    "number_satellite":"20959",
+    "classification":"U",
+    "epoch_year":14,
+    "epoch_day":203.77172593,
+    "mean_motion_first_derivative":0.00000065,
+    "mean_motion_second_derivative":"00000-0",
+    "bstar":"00000+0",
+    "ephemeris_type":0,
+    "ephemeris_number":438,
+    "inclination":54.2974,
+    "right_ascension":207.5968,
+    "eccentricity":0.0114389,
+    "perigee":351.5507,
+    "mean_anomaly":8.2852, 
+    "mean_motion":2.00561578,
+    "revolution":17324
+}

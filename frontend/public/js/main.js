@@ -7,20 +7,25 @@
 
 
 
-
+// Request on Celestrak' API
 import_TLE()
     .then(function (response){
-        //console.log(response);
 
-        list_TLE = response.split('\r\n');
+        
         satellite_id = false
         message_TLE = false
+
+        
+        // Split message by CRLF for simplify reading
+        list_TLE = response.split('\r\n');
+
         for (let i=0; i<list_TLE.length; i++){
-            console.log(list_TLE[i]);
 
             // Affecter le nom du satellite
             if (satellite_id === false && message_TLE === false){
-                satellite_id = list_TLE[i]
+                satellite_id = list_TLE[i];
+                console.log(' ');
+                console.log(satellite_id);
             }
 
             // Première ligne du TLE
@@ -44,14 +49,24 @@ import_TLE()
                 const date = new Date();
                 const positionAndVelocity = satellite.propagate(satrec, date);
                 const gmst = satellite.gstime(date);
-                const position_geodetic = satellite.eciToGeodetic(positionAndVelocity.position, gmst);
+                const position_geodetic = satellite.eciToGeodetic(positionAndVelocity.position, gmst);  // returns in radians
                 const position_ecf = satellite.geodeticToEcf(position_geodetic);
-                observator = {};
-                const position_az_el = satellite.ecfToLookAngles(observator, position_ecf);   //TODO: trouver observator : {longitude, latitude}
+                observator = {
+                    "latitude": 6.66006/180*Math.PI,
+                    "longitude": 46.77904/180*Math.PI,
+                    "height": 0
+                };
+                const position_az_el = satellite.ecfToLookAngles(observator, position_ecf);  // angles in radians
+                const azi = position_az_el["azimuth"] * 180.0 / Math.PI;
+                const ele = position_az_el["elevation"] * 180.0 / Math.PI;
 
-                console.log(position.longitude, position.latitude);// in radians
-                console.log(position.height);// in km
-                console.log(" ")
+                console.log("Position géodésique :");
+                console.log(`Long: ${position_geodetic.longitude.toFixed(2)}, Lat: ${position_geodetic.latitude.toFixed(2)}, H: ${position_geodetic.height.toFixed(2)}`); 
+                console.log("Azimut Elevation :");
+                console.log(`Azi: ${position_az_el["azimuth"].toFixed(2)}, El: ${position_az_el["elevation"].toFixed(2)} [rad]`);
+                console.log(`Azi: ${azi.toFixed(2)}, El: ${ele.toFixed(2)} [deg]`);
+                 
+                
 
                 // Réinitialiser les variables
                 satellite_id = false;

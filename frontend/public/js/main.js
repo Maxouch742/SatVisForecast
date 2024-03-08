@@ -1,61 +1,61 @@
-
 //////////////////////////////
 // Initialize variables
 //////////////////////////////
 
-// TODO: continue: https://vscode.dev/github/taroz/GNSS-Radar/tree/master
-
+// GNSS Receiver's position
+observator = {
+    "latitude": 6.66006/180*Math.PI,
+    "longitude": 46.77904/180*Math.PI,
+    "height": 0
+};
 
 
 // Request on Celestrak' API
 import_TLE()
     .then(function (response){
 
-        
+        // Global variables for get Two Line Element for Orbit satellite
         satellite_id = false
         message_TLE = false
-
         
         // Split message by CRLF for simplify reading
         list_TLE = response.split('\r\n');
 
         for (let i=0; i<list_TLE.length; i++){
 
-            // Affecter le nom du satellite
+            // Get name of satellite
             if (satellite_id === false && message_TLE === false){
                 satellite_id = list_TLE[i];
                 console.log(' ');
                 console.log(satellite_id);
             }
 
-            // Première ligne du TLE
+            // First line of TLE
             if (satellite_id !== false && message_TLE === false && list_TLE[i][0] === "1"){
                 message_TLE = list_TLE[i]
             }
 
-            // Deuxième ligne du TLE
+            // Second line of TLE
             if (satellite_id !== false && message_TLE !== false && list_TLE[i][0] === "2"){
 
-                // Ajouter le TLE au message
+                // Add line to global variable
                 message_TLE += '\n'
                 message_TLE += list_TLE[i]
 
+                // Get object from satellite-js to TLE message
                 const satrec = satellite.twoline2satrec(
                     message_TLE.split('\n')[0].trim(),
                     message_TLE.split('\n')[1].trim()
                 )
                 
-                //TODO: compute position
+                // Date 
                 const date = new Date();
+
+                // compute position
                 const positionAndVelocity = satellite.propagate(satrec, date);
                 const gmst = satellite.gstime(date);
                 const position_geodetic = satellite.eciToGeodetic(positionAndVelocity.position, gmst);  // returns in radians
                 const position_ecf = satellite.geodeticToEcf(position_geodetic);
-                observator = {
-                    "latitude": 6.66006/180*Math.PI,
-                    "longitude": 46.77904/180*Math.PI,
-                    "height": 0
-                };
                 const position_az_el = satellite.ecfToLookAngles(observator, position_ecf);  // angles in radians
                 const azi = position_az_el["azimuth"] * 180.0 / Math.PI;
                 const ele = position_az_el["elevation"] * 180.0 / Math.PI;
@@ -68,7 +68,7 @@ import_TLE()
                  
                 
 
-                // Réinitialiser les variables
+                // Reinit variables for next message
                 satellite_id = false;
                 message_TLE = false;
 
@@ -77,4 +77,5 @@ import_TLE()
         
 
     })
-    .catch(response_error => console.log(response_error));
+    // Display error
+    .catch(response_error => console.log(`[ERROR] ${response_error}`));

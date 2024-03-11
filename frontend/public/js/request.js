@@ -1,5 +1,5 @@
-async function import_TLE() {
-    url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=tle";
+async function import_TLE(group='GNSS', format='tle') {
+    url = `https://celestrak.org/NORAD/elements/gp.php?GROUP=${group}&FORMAT=${format}`;
     return await getData(url);
 }
 
@@ -106,6 +106,7 @@ function getPositionSatellite(observator){
                     const gmst = satellite.gstime(date);
                     const position_geodetic = satellite.eciToGeodetic(positionAndVelocity.position, gmst);  // returns in radians
                     const position_ecf = satellite.geodeticToEcf(position_geodetic);
+                    console.log(observator)
                     const position_az_el = satellite.ecfToLookAngles(observator, position_ecf);  // angles in radians
                     const azi = position_az_el["azimuth"] * 180.0 / Math.PI;
                     const ele = position_az_el["elevation"] * 180.0 / Math.PI;

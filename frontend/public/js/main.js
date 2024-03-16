@@ -9,38 +9,75 @@
  */
 
 import { 
-    heightInNf02, 
+    getHeightInNf02, 
     nf02ToBessel, 
     mn95ToWgs84,
     TleSatellite
 } from './satellite-position/api.js'
+import {
+    compute_satellite
+} from './satellite-position/compute.js'
 
 
 function satellite_function(observator_position){
 
-    const height_NF02_api = heightInNf02(observator_position.east, observator_position.north);
+    const height_NF02_api = getHeightInNf02(observator_position.east, observator_position.north);
     height_NF02_api
-        .then(response => observator_position.height_NF02 = response.height )
+        .then(function(response) {
+            // Add element to observator Object
+            observator_position.height_NF02 = parseFloat(response.height);
+
+            // NF02 Height to Bessel's height
+            const height_bessel_api = nf02ToBessel(observator_position.east, observator_position.north, observator_position.height_NF02);
+            height_bessel_api
+                .then(function(response){
+                    // Add element to observator Object
+                    observator_position.height_bessel = parseFloat(response.altitude);
+
+                    // MN95/Bessel to WGS84:
+                    const position_wgs84 = mn95ToWgs84(observator_position.east, observator_position.north, observator_position.height_bessel);
+                    position_wgs84
+                        .then(function(response){
+                            // Add element to observator Object
+                            observator_position.latitude = parseFloat(response.easting);
+                            observator_position.longitude = parseFloat(response.northing);
+                            observator_position.height = parseFloat(response.altitude);
+
+                            // Compute position's SV
+                            const requestSatellite = TleSatellite();
+                            requestSatellite
+                                //.then(response => compute_satellite(response, observator_position))
+                                .then(function(response){
+                                    console.log(response);
+                                    compute_satellite(response);
+                                })
+                                .catch(console.log("ERROR: IMPORT SATELLITE"));
+
+                            
+
+                        })
+                        .catch(console.log("ERROR: MN95 to WGS84")); 
+
+
+                })
+                .catch(console.log("ERROR: height NF02 to Bessel"));
+
+
+        })
         .catch(console.log("ERROR: height in NF02"));
     
-    const height_bessel_api = nf02ToBessel(
-        observator_position.east, 
-        observator_position.north, 
-        observator_position.height_NF02
-    );
-    height_bessel_api
-        .then(response => observator_position.height_bessel = response.height_bessel )
-        .catch(console.log("ERROR: height NF02 to Bessel"));
-
-    const position_wgs84 = mn95ToWgs84(
-        observator_position.east, 
-        observator_position.north, 
-        observator_position.height_bessel
-    );
-    //TODO
+    
 
 }
 
+const pos = {
+    'east':2600000.0,
+    'north':1200000.0,
+};
+satellite_function(pos)
+
+
+/*
 positionSV = {}
 
     // Convert position MN95 to WGS84
@@ -135,3 +172,4 @@ positionSV = {}
         // Display error
         .catch(response_error => console.log(`[ERROR] ${response_error}`));
     }
+    */

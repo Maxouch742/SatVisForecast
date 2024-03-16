@@ -57,7 +57,7 @@ export async function nf02ToBessel(east, north, altitude=1000.0){
  * @param {Number} north North coordinate in meters [m] in LV95
  * @returns 
  */
-export async function heightInNf02(east, north){
+export async function getHeightInNf02(east, north){
     const response = await fetch(`${GEOADMIN_API}/height?easting=${east}&northing=${north}`, {
         method: HTTP_METHODS.GET
     });
@@ -78,6 +78,8 @@ export async function TleSatellite(group='GNSS', format='tle') {
     const response = await fetch(`${CELESTRAK_API}/gp.php?GROUP=${group}&FORMAT=${format}`, {
         method: HTTP_METHODS.GET
     });
+    console.log(`${CELESTRAK_API}/gp.php?GROUP=${group}&FORMAT=${format}`);
     const result = await response.json();
+    console.log(result);
     return result
 }

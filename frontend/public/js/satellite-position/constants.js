@@ -8,7 +8,7 @@
  */
 
 export const GEODESY_API = "http://geodesy.geo.admin.ch/reframe";
-export const GEOADMIN_API = "https://api3.geo.admin.ch/rest/services/";
+export const GEOADMIN_API = "https://api3.geo.admin.ch/rest/services";
 export const CELESTRAK_API = "https://celestrak.org/NORAD/elements";
 export const HTTP_METHODS = {
     GET: 'GET',

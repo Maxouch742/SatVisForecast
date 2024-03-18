@@ -74,12 +74,10 @@ export async function getHeightInNf02(east, north){
  * @returns 
  */
 
-export async function TleSatellite(group='GNSS', format='tle') {
+export async function TleSatellite(format='tle',group='GNSS') {
     const response = await fetch(`${CELESTRAK_API}/gp.php?GROUP=${group}&FORMAT=${format}`, {
         method: HTTP_METHODS.GET
     });
-    console.log(`${CELESTRAK_API}/gp.php?GROUP=${group}&FORMAT=${format}`);
     const result = await response.json();
-    console.log(result);
     return result
 }

@@ -1,24 +1,3 @@
-/**
- * 
- * 
- * @param {String} date "18.03.2024 09:00"
- * @returns 
- */
-export function date_parsed(date){
-
-    const data1 = date.split(' ');
-    const data2 = data1[0].split('.');
-    const data3 = data1[1].split(':');
-
-    const year = + data2[2];
-    const month = + data2[1];
-    const day = + data2[0];
-    const hours = + data3[0];
-    const minutes = + data3[1];
-
-    return [year, month, day, hours, minutes]
-}
-
 export function days2mdhms(year, days){
     /* -----------------------------------------------------------------------------
     *

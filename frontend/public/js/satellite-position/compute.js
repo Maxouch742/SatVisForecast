@@ -22,7 +22,7 @@ import {
 } from './time.js'
 import {
     sgp4init
-} from './sgp4init.js'
+} from './other.js'
 
 
 /**
@@ -40,9 +40,10 @@ function convertJSON(json){
 
     // Decode first line
     satrec.satnum = json.NORAD_CAT_ID;
-    satrec.epochyr = json.EPOCH.split('-')[0].slice(-2);
+    satrec.epochyr = +json.EPOCH.split('-')[0].slice(-2);
     satrec.epochdays = computeDayYear(new Date(json.EPOCH));
     satrec.ndot = json.MEAN_MOTION_DOT;
+    console.log("MEAN_MOTION_DOT", satrec.ndot);
     satrec.nddot = json.MEAN_MOTION_DDOT;
     satrec.bstar = json.BSTAR;
     
@@ -114,7 +115,38 @@ function convertJSON(json){
 export function compute_satellite(data_satellite, observator, date){
 
     console.log(date);
+
+    const ISS_TLE = 
+        `1 24876U 97035A   24077.53997754 -.00000020  00000+0  00000+0 0  9991
+         2 24876  55.6395 130.7141 0076551  52.2531 308.5023  2.00565528195471`;
+    // Initialize the satellite record with this TLE
+    const satrec = satellite.twoline2satrec(
+        ISS_TLE.split('\n')[0].trim(), 
+        ISS_TLE.split('\n')[1].trim()
+    );
+    console.log(satrec);
+    const satrec2 = convertJSON({
+        "OBJECT_NAME":"NAVSTAR 43 (USA 132)",
+        "OBJECT_ID":"1997-035A",
+        "EPOCH":"2024-03-17T12:57:34.059456",
+        "MEAN_MOTION":2.00565528,
+        "ECCENTRICITY":0.0076551,
+        "INCLINATION":55.6395,
+        "RA_OF_ASC_NODE":130.7141,
+        "ARG_OF_PERICENTER":52.2531,
+        "MEAN_ANOMALY":308.5023,
+        "EPHEMERIS_TYPE":0,
+        "CLASSIFICATION_TYPE":"U",
+        "NORAD_CAT_ID":24876,
+        "ELEMENT_SET_NO":999,
+        "REV_AT_EPOCH":19547,
+        "BSTAR":0,
+        "MEAN_MOTION_DOT":-2.0e-7,
+        "MEAN_MOTION_DDOT":0
+    },);
+    console.log(satrec2)
     
+    /*
     // Course of data
     data_satellite.forEach((element) => {
 
@@ -125,8 +157,8 @@ export function compute_satellite(data_satellite, observator, date){
 
         // Compute 
         const positionAndVelocity = satellite.propagate(satrec, date);
+        console.log(positionAndVelocity)
         const gmst = satellite.gstime(date);
-        console.log(gmst);
         const position_geodetic = satellite.eciToGeodetic(positionAndVelocity.position, gmst);  // returns in radians
         const position_ecf = satellite.geodeticToEcf(position_geodetic);
         const position_az_el = satellite.ecfToLookAngles(observator, position_ecf);  // angles in radians
@@ -141,7 +173,7 @@ export function compute_satellite(data_satellite, observator, date){
             
         // TODO : Export value
 
-    });
+    });*/
 
 
     /*
@@ -201,14 +233,4 @@ export function compute_satellite(data_satellite, observator, date){
         }
     }
     */
-}
-
-
-function propagate(orbit, date){
-    const date_orbit = new Date(orbit.EPOCH);
-    const m = (date - date_orbit) * MINUTES_PER_DAY;
-
-    const res = sgp4(orbit, m);
-
-    return res
 }

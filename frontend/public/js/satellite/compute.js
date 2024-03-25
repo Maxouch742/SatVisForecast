@@ -63,6 +63,7 @@ export function compute_satellite(obs_position, date, tle_message){
 
     })
 
+    console.log(satellite_return);
     return satellite_return;
 
 }

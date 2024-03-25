@@ -20,6 +20,7 @@ $(document).ready(function () {
         .then(function(response){ 
 
             tle_message = response
+            console.log(tle_message);
         
             //----------------- Compute receiver position
             // Recover user-recorded date and time (TODO: get element in balise)

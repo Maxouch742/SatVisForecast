@@ -24,6 +24,14 @@ export function point_launched(coord_sta, angle){
 }
 
 
+/**
+ * Compute elevation for each profile and each point in profile
+ * 
+ * @param {Array} results 
+ * @param {Array} coord_base 
+ * @param {Number} height_instrument 
+ * @returns 
+ */
 export function elevation(results, coord_base, height_instrument){
 
     results.forEach(element => {
@@ -55,6 +63,12 @@ export function elevation(results, coord_base, height_instrument){
     return results
 }
 
+/**
+ * Find elevation max in profil
+ * 
+ * @param {Array} data 
+ * @returns 
+ */
 export function elevation_max(data){
 
     const mask_elevation = [];

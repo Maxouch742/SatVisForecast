@@ -12,6 +12,13 @@ import {
 } from './constants.js'
 
 
+/**
+ * Request profile on api3.geo.admin
+ * 
+ * @param {Array} coord_start 
+ * @param {Array} coord_end 
+ * @returns 
+ */
 export function request_profile(coord_start, coord_end){
 
     // Build address

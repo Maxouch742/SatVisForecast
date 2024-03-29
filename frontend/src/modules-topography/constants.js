@@ -10,6 +10,5 @@
 export const GEOADMIN_API = "https://api3.geo.admin.ch/rest/services";
 export const NB_POINT = 1000;
 export const MAX_DISTANCE = 8000; // in meters
-
 export const DEG2RAD = Math.PI / 180.0;
 export const RAD2DEG = 180.0 / Math.PI;

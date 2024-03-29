@@ -1,6 +1,20 @@
+/**
+ * ---------------------------------------------------------------------
+ * 
+ * This module is responsible of functions in computations.
+ * 
+ * ---------------------------------------------------------------------
+ */
+
 import { DEG2RAD, MAX_DISTANCE, RAD2DEG } from "./constants";
 
-
+/**
+ * Compute point launched with base coordinates and angle.
+ * 
+ * @param {Array} coord_sta 
+ * @param {Number} angle 
+ * @returns {Array}
+ */
 export function point_launched(coord_sta, angle){
 
     const point_easting = coord_sta[0] + Math.sin(angle * DEG2RAD) * MAX_DISTANCE;
@@ -8,6 +22,7 @@ export function point_launched(coord_sta, angle){
 
     return [point_easting, point_northing];
 }
+
 
 export function elevation(results, coord_base, height_instrument){
 

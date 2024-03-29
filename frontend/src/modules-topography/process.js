@@ -1,6 +1,22 @@
+/**
+ * ---------------------------------------------------------------------
+ * 
+ * This module is responsible of main process for compute topography
+ * mask.
+ * 
+ * ---------------------------------------------------------------------
+ */
+
 import { request_profile } from "./api";
 import { elevation, elevation_max, point_launched } from "./compute";
 
+
+/**
+ * Process for compute topography mask
+ * 
+ * @param {Array} coord_start 
+ * @param {Number} height_instrument 
+ */
 export function process(coord_start, height_instrument){
 
     const tabpromise = [];
@@ -14,9 +30,9 @@ export function process(coord_start, height_instrument){
     }
 
     ok = Promise.all(tabpromise).then(results => {
-        data = elevation(results);
+        data = elevation(results, coord_start, height_instrument);
         mask = elevation_max(data);
         return mask
     });
-    console.log("OKOKOKOK", ok)
+    // TODO: trouver une solution pour exporter les résultats
 }

@@ -63,8 +63,9 @@ import { useMapStore } from '@/stores/mapStore';
 import { useSkyPlotStore } from '@/stores/skyplotStore';
 import { TleSatellite, nf02ToBessel, mn95ToWgs84 } from '@/modules-sat/api.js';
 import { compute_satellite } from '@/modules-sat/compute.js';
-import { request_profile } from "@/modules-topography/api";
-import { elevation, elevation_max, point_launched } from "@/modules-topography/compute";
+import { RAD2DEG } from '@/modules-topography/constants.js';
+import { request_profile } from '@/modules-topography/api.js';
+import { elevation, elevation_max, point_launched } from '@/modules-topography/compute.js';
 
 export default {
   name: 'FormInput',
@@ -127,7 +128,7 @@ export default {
       return response;
     },
 
-    async responseToListsAziElev(dataStringAziElev){
+    async responseToListsAziElev(dataStringAziElev, data_receiver){
       console.log(dataStringAziElev);
 
       // Create list for return response
@@ -135,7 +136,12 @@ export default {
 
       // Browse data for get azimut and elevation
       dataStringAziElev.forEach(element => {
-        console.log(element.azimut);
+        const delta_E = element.easting - data_receiver.E;
+        const delta_N = element.northing - data_receiver.N;
+        console.log(delta_E, delta_N);
+        let azi = Math.atan2(element.northing-data_receiver.N,element.easting-data_receiver.E) * RAD2DEG;
+        if (azi < 0){ azi += 360 }
+        console.log(azi, element.azimut); 
         const point = [element.azimut, element.elevation];
         response.push(point);
       })
@@ -261,19 +267,6 @@ export default {
       
 
       // ==============================
-      // === DRAW RELIEF ON THE MAP ===
-      // ==============================
-      // TODO, connect the real data here !
-      const listENofRelief = [[2600000,1200000], [2700000,1200000], [2700000,1100000], [2600000,1200000]]; 
-      // get the stored map (gloabl)
-      const mapStore = useMapStore();
-      // delete layer on the map (not the background)
-      mapStore.invokeClearMapLayers();
-      // drawing line on 2D-map
-      mapStore.invokeAddLineLayer(listENofRelief);
-
-
-      // ==============================
       // === DRAW THE POLAR SKYPLOT ===
       // ==============================
 
@@ -281,7 +274,7 @@ export default {
       // ---------------
       const dataString = await this.getTopography(JSONrequest);
 
-      const listAziElevOfRelief = await this.responseToListsAziElev(dataString);
+      const listAziElevOfRelief = await this.responseToListsAziElev(dataString, JSONrequest);
       // drawing relief on the polar chart 
       
       // SATELITTE SCATTER 
@@ -296,6 +289,19 @@ export default {
       skyPlotStore.drawSatsOnSykPlot(dataSatJSON);  
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
 
+
+
+      // ==============================
+      // === DRAW RELIEF ON THE MAP ===
+      // ==============================
+      // TODO, connect the real data here !
+      const listENofRelief = await this.responseToListEastNorth(dataString);
+      // get the stored map (gloabl)
+      const mapStore = useMapStore();
+      // delete layer on the map (not the background)
+      mapStore.invokeClearMapLayers();
+      // drawing line on 2D-map
+      mapStore.invokeAddLineLayer(listENofRelief);
 
 
 

@@ -597,7 +597,6 @@ export default {
       
       // SATELITTE SCATTER 
       // -----------------
-      // TODO: get the real data from Maxouch
       const dataSatJSON = await this.getSatelittes(JSONrequest);
 
 

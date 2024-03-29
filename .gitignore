@@ -1,1 +1,22 @@
 *.bak
+
+# Frontend
+.DS_Store
+frontend/node_modules
+frontend/dist
+
+.env.local
+.env.*.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -39,3 +39,25 @@ export function elevation(results, coord_base, height_instrument){
     })
     return results
 }
+
+export function elevation_max(data){
+
+    const mask_elevation = [];
+    data.forEach(profile => {
+        // Create list of elevation for a profile
+        const list_elevation = profile.map(obj => obj.elevation);
+
+        // Find the hight value of elevation in the list
+        const max_elevation = Math.max(...list_elevation);
+
+        // Find the index of the place for the max elevation
+        const index_max_value = list_elevation.findIndex(value => value === max_elevation);
+
+        // Get Object in response array
+        const obser_max_elevation = profile[index_max_value];
+
+        // Push the observation in the list
+        mask_elevation.push(obser_max_elevation);
+    });
+    return mask_elevation;
+}

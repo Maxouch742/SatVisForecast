@@ -6,8 +6,6 @@
  */
 export function constellation(object_name){
 
-    console.log(object_name);
-
     let constellation_gnss = false;
 
     if (object_name.includes("NAVSTAR")){ constellation_gnss = "GPS" }

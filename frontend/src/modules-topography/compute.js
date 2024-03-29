@@ -46,6 +46,10 @@ export function elevation(results, coord_base, height_instrument){
                 const delta_E = observation.easting - coord_base[0];
                 const delta_N = observation.northing - coord_base[1];
                 let azi = Math.atan2(delta_N, delta_E)*RAD2DEG;
+                if (azi === undefined){
+                    console.log("Oups");
+                    console.log(delta_E, delta_N);
+                }
                 if (azi < 0){
                     azi += 360.0;
                 }

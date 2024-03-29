@@ -48,7 +48,7 @@ export function elevation(results, coord_base, height_instrument){
                 let azi = Math.atan2(delta_N, delta_E)*RAD2DEG;
                 if (azi < 0){
                     azi += 360.0;
-                };
+                }
                 element[i].elevation = elev;
                 element[i].azimut = azi;
             }

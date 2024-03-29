@@ -63,7 +63,8 @@ import { useMapStore } from '@/stores/mapStore';
 import { useSkyPlotStore } from '@/stores/skyplotStore';
 import { TleSatellite, nf02ToBessel, mn95ToWgs84 } from '@/modules-sat/api.js';
 import { compute_satellite } from '@/modules-sat/compute.js';
-
+import { request_profile } from "@/modules-topography/api";
+import { elevation, elevation_max, point_launched } from "@/modules-topography/compute";
 
 export default {
   name: 'FormInput',
@@ -114,6 +115,7 @@ export default {
     },
 
     async responseToListsAziElev(dataStringAziElev){
+      console.log(dataStringAziElev);
       
       // formattating the response of visibiliy test (without sat.)
       let listAziElevOfRelief = dataStringAziElev.split('\n').map(line => {
@@ -165,7 +167,40 @@ export default {
     },
 
 
+    /**
+     * Request mask topography
+     * 
+     * @param {Object} JSONrequest 
+     */
+    async getTopography(JSONrequest){
 
+      try {
+
+        // Reforme in object
+        const coord_start = [ JSONrequest.E, JSONrequest.N ];
+        const height_instrument = JSONrequest.instrumentHeight;
+
+        const tabpromise = [];
+
+        // Iteration, on angles from 0 to 359
+        for (let i=0; i<360; i++){
+          const coord_end = point_launched(coord_start, i);
+          const profile = request_profile(coord_start, coord_end);
+          tabpromise.push(profile);
+        }
+
+        // Calculate elevation as soon as all requests have been passed.
+        return Promise.all(tabpromise).then(results => {
+            const data = elevation(results, coord_start, height_instrument);
+            const mask = elevation_max(data);
+            return mask;
+        });
+
+      } catch(error){
+        console.log("ERROR", error);
+        throw error; // Rethrow the error so that it can be caught by the caller
+      }
+    },
 
 
 
@@ -227,6 +262,7 @@ export default {
       // TOPOGRAPHY MASK
       // ---------------
       // TODO: connect the real data here (from FST)
+      /*
       const dataString = `
       
       0.6437;32.6121
@@ -588,10 +624,12 @@ export default {
 356.9225;32.1851
 357.5104;32.3573
 358.741;32.434
-359.3634;32.5905
+359.3634;32.5905`
+*/
 
-      
-      `
+      const dataString = await this.getTopography(JSONrequest);
+      console.log(dataString);
+
       const listAziElevOfRelief = await this.responseToListsAziElev(dataString);
       // drawing relief on the polar chart 
       

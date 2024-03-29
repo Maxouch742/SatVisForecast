@@ -22,7 +22,7 @@ import {
 export function request_profile(coord_start, coord_end){
 
     // Build address
-    const api_profil = `${GEOADMIN_API}/rest/services/profile.json?nb_points=${NB_POINT}&geom={"type":"LineString","coordinates":[[${coord_start[0]},${coord_start[0]}],[${coord_end[0]},${coord_end[0]}]]}`;
+    const api_profil = `${GEOADMIN_API}/profile.json?nb_points=${NB_POINT}&geom={"type":"LineString","coordinates":[[${coord_start[0].toFixed(4)},${coord_start[1].toFixed(4)}],[${coord_end[0].toFixed(4)},${coord_end[1].toFixed(4)}]]}`;
 
     // Get request
     let promise = fetch(api_profil)

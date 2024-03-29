@@ -18,7 +18,7 @@ import { day_of_year, day_fract_part } from "./time.js";
 export function convertJSON(orbit){
 
     // Create message and first line
-    let tle_message = '1'
+    let tle_message = '1';
 
     const satellite_number = orbit.NORAD_CAT_ID;
     const classification = orbit.CLASSIFICATION_TYPE;
@@ -38,7 +38,7 @@ export function convertJSON(orbit){
     let mm_dot_sign = '-';
     if (mm_dot >= 0.0){
         mm_dot_sign = ' '
-    };
+    }
     const numb = mm_dot * Math.sign(mm_dot);
     tle_message += ` ${mm_dot_sign}.${numb.toFixed(8).slice(-8)}`;
 

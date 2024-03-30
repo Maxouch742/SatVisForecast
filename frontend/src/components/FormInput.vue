@@ -134,7 +134,9 @@ export default {
 
       // Browse data for get azimut and elevation
       dataStringAziElev.forEach(element => {
-        const point = [element.azimut, element.elevation];
+        let azimut = element.azimut - 90.0;
+        if (azimut < 0.0){ azimut += 360 }
+        const point = [azimut, element.elevation];
         response.push(point);
       })
 
@@ -243,19 +245,7 @@ export default {
         'instrumentHeight': this.instrumentHeight,
         'elevationMask': this.elevationMask,
         'datetime': this.datetime
-      };
-      // logging complete request JSON
-      // console.log(JSON.stringify(JSONrequest, null, 2))
-
-      // ====================================
-      // === SEND RELIEF VISIBILY REQUEST ===
-      // ====================================
-
-
-      // =================================
-      // === SEND SAT VISIBILY REQUEST ===
-      // =================================
-      
+      };      
 
       // ==============================
       // === DRAW THE POLAR SKYPLOT ===
@@ -263,21 +253,19 @@ export default {
 
       // TOPOGRAPHY MASK
       // ---------------
-      const dataString = await this.getTopography(JSONrequest);
+      const dataTopoMask = await this.getTopography(JSONrequest);
 
-      const listAziElevOfRelief = await this.responseToListsAziElev(dataString);
-      // drawing relief on the polar chart 
-      
       // SATELITTE SCATTER 
       // -----------------
-      const dataSatJSON = await this.getSatelittes(JSONrequest);
+      const dataSatellite = await this.getSatelittes(JSONrequest);
 
 
       // PLOT ELEMENTS ON POLAR CHARTS
       // -----------------------------
+      const listAziElevOfRelief = await this.responseToListsAziElev(dataTopoMask);
       const skyPlotStore = useSkyPlotStore(); // get the stored chart first
       skyPlotStore.removeAllSeries(); // delete existing data first
-      skyPlotStore.drawSatsOnSykPlot(dataSatJSON);  
+      skyPlotStore.drawSatsOnSykPlot(dataSatellite);  
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
 
 
@@ -285,8 +273,7 @@ export default {
       // ==============================
       // === DRAW RELIEF ON THE MAP ===
       // ==============================
-      // TODO, connect the real data here !
-      const listENofRelief = await this.responseToListEastNorth(dataString);
+      const listENofRelief = await this.responseToListEastNorth(dataTopoMask);
       // get the stored map (gloabl)
       const mapStore = useMapStore();
       // delete layer on the map (not the background)

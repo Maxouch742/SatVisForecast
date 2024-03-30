@@ -61,11 +61,12 @@
         target: this.$refs['map-root'],
         layers: [nationalMap],
         view: new View({
-          center: [2660000, 1190000], // Default center of map
+          center: [2600000, 1200000], // Default center of map
           zoom: 9, 
           projection: get('EPSG:2056')
         }),
       });
+      this.addPoint([2600000, 1200000]);
 
 
       // Handle map click event
@@ -83,6 +84,23 @@
           this.map.removeOverlay(this.locationOverlay);
         }
 
+        this.addPoint(coordinates);
+      });
+
+      // init global storage of map (to interact from other containers)
+      const mapStore = useMapStore();
+      mapStore.setMap(this.map);
+      mapStore.setAddLineLayerMethod(this.addLineLayer);
+      mapStore.setClearMapLayers(this.clearMapLayers);
+
+
+
+    }, // end mounted
+
+    
+    methods: {
+
+      addPoint(coordinates){
         // URL of the SVG icon
         const iconUrl = require("../assets/antenna.png")
 
@@ -100,21 +118,7 @@
           offset: [0, 7] // Adjust the offset to point the right tip-mouse-spot
         });
         this.map.addOverlay(this.locationOverlay);
-      });
-
-
-      // init global storage of map (to interact from other containers)
-      const mapStore = useMapStore();
-      mapStore.setMap(this.map);
-      mapStore.setAddLineLayerMethod(this.addLineLayer);
-      mapStore.setClearMapLayers(this.clearMapLayers);
-
-
-
-    }, // end mounted
-
-    
-    methods: {
+      },
 
       addLineLayer(coordinates) {
         // Add a simple line layer to the map (here, for the local topography mask)

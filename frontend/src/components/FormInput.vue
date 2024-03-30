@@ -288,6 +288,7 @@ export default {
       const skyPlotStore = useSkyPlotStore(); // get the stored chart first
       skyPlotStore.removeAllSeries(); // delete existing data first
       skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);  
+      skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite);
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
 
 

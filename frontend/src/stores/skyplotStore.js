@@ -19,22 +19,6 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
     chart: null, // Pour stocker l'instance du graphique
   }),
   actions: {
-    drawReliefOnSkyPlot(listAziElevOfRelief) {
-
-      if (this.chart) {
-        this.chart.addSeries({
-          name: 'Topography mask',
-          type: 'area',
-          data: listAziElevOfRelief,
-          color: 'gray',
-          fillColor: 'rgba(128, 128, 128, 0.3)', // Gris transparent
-          lineWidth: 1,
-          marker: {
-            enabled: false
-          }
-        });
-      }
-    },
     initializeChart(containerId) {
       this.chart = Highcharts.chart(containerId, {
         chart: {
@@ -75,15 +59,64 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
       });
     },
 
-    
-
-
     removeAllSeries() {
         if (this.chart) {
             while (this.chart.series.length > 0) {
                 this.chart.series[0].remove(true);
             }
         }
+    },
+
+    drawReliefOnSkyPlot(listAziElevOfRelief) {
+
+      if (this.chart) {
+        this.chart.addSeries({
+          name: 'Topography mask',
+          type: 'area',
+          data: listAziElevOfRelief,
+          color: 'gray',
+          fillColor: 'rgba(128, 128, 128, 0.3)', // Gris transparent
+          lineWidth: 1,
+          marker: {
+            enabled: false
+          }
+        });
+      }
+    },
+
+    drawSatsOnSykPlot_traj(dataSatJSON) {
+      const data_constellation = {}
+
+      // Create object general with list for position's satellite
+      dataSatJSON.forEach(element => {
+
+        const data = element.data;
+        data.forEach( sat => {
+
+          const constellation = sat.constellation;
+
+          if ( (constellation in data_constellation) === false){
+            
+            // Add constellation, satellite and position
+            data_constellation[constellation] = {};
+            data_constellation[constellation][sat.name] = [ [sat.azimut, sat.elevation] ];
+
+          } else {
+
+            const const_data = data_constellation[constellation];
+
+            if ( (sat.name in const_data) === false){
+              // add satellite and position
+              const_data[sat.name] = [[sat.azimut, sat.elevation]];
+            }
+            else {
+              // Add position
+              const_data[sat.name].push( [sat.azimut, sat.elevation] );
+            }
+          }
+        })
+      })
+      console.log("data_const", data_constellation);
     },
 
     drawSatsOnSykPlot(dataSatJSON) {

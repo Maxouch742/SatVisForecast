@@ -35,8 +35,9 @@
       },
       attributions: ["&copy; <a href=\"https://www.geo.admin.ch/fr/home.html\">WMTS national map / geo.admin.ch</a>"]
     }),
+    opacity: 0.6,
     properties: {
-      isBaseLayer: true  // not to delete it
+      isBaseLayer: true,  // not to delete it
     }
   });
 
@@ -62,7 +63,7 @@
         view: new View({
           center: [2660000, 1190000], // Default center of map
           zoom: 9, 
-          projection: get('EPSG:2056') 
+          projection: get('EPSG:2056')
         }),
       });
 

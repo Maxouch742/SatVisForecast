@@ -91,8 +91,7 @@ export default {
       response: null
     };
   },
-  
-  
+
   methods: {
     
     async fetchHeight() {
@@ -148,7 +147,7 @@ export default {
 
             // Download TLE Message
             const tle_message = await TleSatellite('json');
-
+            
             // Recover user-recorded date and time
             const date = new Date(JSONrequest.datetime);
 
@@ -173,9 +172,30 @@ export default {
             obs_position.longitude = parseFloat(wgs84.northing);
             obs_position.height = parseFloat(wgs84.altitude);
 
+            // Create return response
+            const response_result = [];
+
+            // Range date on 24 hours (1 day)
+            for (let i=0; i<24; i++){
+
+              // Create new date
+              const newDate = date.setHours(date.getHours() + i);
+
+              // Compute position's SV
+              const res = compute_satellite(obs_position, date, tle_message);
+              const temp = {}
+              temp.date = newDate;
+              temp.data = res;
+              console.log("res", res);
+              response_result.push(temp);
+
+            }
+            console.log("Data with hours", response_result)
+            
+
             // Compute position's SV
-            const res = compute_satellite(obs_position, date, tle_message);
-            return res;
+            //const res = compute_satellite(obs_position, date, tle_message);
+            return response_result;
 
         } catch (error) {
             console.log("ERROR", error);
@@ -258,6 +278,7 @@ export default {
       // SATELITTE SCATTER 
       // -----------------
       const dataSatellite = await this.getSatelittes(JSONrequest);
+      const dataSatellite_last = dataSatellite.slice(-1);
 
 
       // PLOT ELEMENTS ON POLAR CHARTS
@@ -265,7 +286,7 @@ export default {
       const listAziElevOfRelief = await this.responseToListsAziElev(dataTopoMask);
       const skyPlotStore = useSkyPlotStore(); // get the stored chart first
       skyPlotStore.removeAllSeries(); // delete existing data first
-      skyPlotStore.drawSatsOnSykPlot(dataSatellite);  
+      skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);  
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
 
 

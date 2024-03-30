@@ -63,7 +63,6 @@ import { useMapStore } from '@/stores/mapStore';
 import { useSkyPlotStore } from '@/stores/skyplotStore';
 import { TleSatellite, nf02ToBessel, mn95ToWgs84 } from '@/modules-sat/api.js';
 import { compute_satellite } from '@/modules-sat/compute.js';
-import { RAD2DEG } from '@/modules-topography/constants.js';
 import { request_profile } from '@/modules-topography/api.js';
 import { elevation, elevation_max, point_launched } from '@/modules-topography/compute.js';
 
@@ -128,25 +127,17 @@ export default {
       return response;
     },
 
-    async responseToListsAziElev(dataStringAziElev, data_receiver){
-      console.log(dataStringAziElev);
+    async responseToListsAziElev(dataStringAziElev){
 
       // Create list for return response
       const response = [];
 
       // Browse data for get azimut and elevation
       dataStringAziElev.forEach(element => {
-        const delta_E = element.easting - data_receiver.E;
-        const delta_N = element.northing - data_receiver.N;
-        console.log(delta_E, delta_N);
-        let azi = Math.atan2(element.northing-data_receiver.N,element.easting-data_receiver.E) * RAD2DEG;
-        if (azi < 0){ azi += 360 }
-        console.log(azi, element.azimut); 
         const point = [element.azimut, element.elevation];
         response.push(point);
       })
 
-      console.log(response);
       return response;
     },
 
@@ -274,7 +265,7 @@ export default {
       // ---------------
       const dataString = await this.getTopography(JSONrequest);
 
-      const listAziElevOfRelief = await this.responseToListsAziElev(dataString, JSONrequest);
+      const listAziElevOfRelief = await this.responseToListsAziElev(dataString);
       // drawing relief on the polar chart 
       
       // SATELITTE SCATTER 

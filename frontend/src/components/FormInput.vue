@@ -64,7 +64,7 @@ import { useSkyPlotStore } from '@/stores/skyplotStore';
 import { TleSatellite, nf02ToBessel, mn95ToWgs84 } from '@/modules-sat/api.js';
 import { compute_satellite } from '@/modules-sat/compute.js';
 import { request_profile } from '@/modules-topography/api.js';
-import { elevation, elevation_max, point_launched } from '@/modules-topography/compute.js';
+import { calcElevation, maxElevation, point_launched } from '@/modules-topography/compute.js';
 
 export default {
   name: 'FormInput',
@@ -133,12 +133,12 @@ export default {
 
       // Browse data for get azimut and elevation
       dataStringAziElev.forEach(element => {
-        let azimut = element.azimut - 90.0;
+        let azimut = element.phi + 90.0;
         if (azimut < 0.0){ azimut += 360 }
+        if (azimut > 360){ azimut -= 360 }
         const point = [azimut, element.elevation];
         response.push(point);
       })
-
       return response;
     },
 
@@ -186,11 +186,11 @@ export default {
               const temp = {}
               temp.date = newDate;
               temp.data = res;
-              console.log("res", res);
+              //console.log("res", res);
               response_result.push(temp);
 
             }
-            console.log("Data with hours", response_result)
+            //console.log("Data with hours", response_result)
             
 
             // Compute position's SV
@@ -228,8 +228,8 @@ export default {
 
         // Calculate elevation as soon as all requests have been passed.
         return Promise.all(tabpromise).then(results => {
-            const data = elevation(results, coord_start, height_instrument);
-            const mask = elevation_max(data);
+            const data = calcElevation(results, coord_start, height_instrument);
+            const mask = maxElevation(data);
             return mask;
         });
 
@@ -274,6 +274,7 @@ export default {
       // TOPOGRAPHY MASK
       // ---------------
       const dataTopoMask = await this.getTopography(JSONrequest);
+      console.log(dataTopoMask);
 
       // SATELITTE SCATTER 
       // -----------------

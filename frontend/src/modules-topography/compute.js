@@ -25,6 +25,33 @@ export function point_launched(coord_sta, angle){
 
 
 /**
+ * 
+ * @param {*} observation 
+ * @param {*} coordinates 
+ * @returns 
+ */
+function gisement(observation, coordinates){
+    const delta_E = observation.easting - coordinates[0];
+    const delta_N = observation.northing - coordinates[1];
+    let phi = Math.atan2(delta_N, delta_E) * RAD2DEG;
+    if (phi < 0){ phi += 360.0 }
+    return phi;
+}
+
+
+/**
+ * 
+ * @param {*} observation 
+ * @param {*} dh 
+ * @returns 
+ */
+function elevation(observation, dh){
+    const elev = Math.atan(dh / observation.dist) * RAD2DEG;
+    return elev
+}
+
+
+/**
  * Compute elevation for each profile and each point in profile
  * 
  * @param {Array} results 
@@ -32,7 +59,7 @@ export function point_launched(coord_sta, angle){
  * @param {Number} height_instrument 
  * @returns 
  */
-export function elevation(results, coord_base, height_instrument){
+export function calcElevation(results, coord_base, height_instrument){
 
     results.forEach(element => {
 
@@ -42,18 +69,31 @@ export function elevation(results, coord_base, height_instrument){
 
             if (!firstIteration){
                 const dh = observation.alts.DTM25 - (element[0].alts.DTM25 + height_instrument);
-                const elev = Math.atan(dh / observation.dist) * RAD2DEG;
-                const delta_E = observation.easting - coord_base[0];
-                const delta_N = observation.northing - coord_base[1];
-                let azi = Math.atan2(delta_N, delta_E) * RAD2DEG;
-                if (azi < 0){ azi += 360.0 }
-                element[i].elevation = elev;
-                element[i].azimut = azi;
+
+                if (dh >= 0){
+                    // Compute azimut and elevation
+                    const elev = elevation(observation, dh);
+                    const phi = gisement(observation, coord_base);
+                    
+                    // Push orientation and elevation in the profile
+                    element[i].elevation = elev;
+                    element[i].phi = phi;
+                
+                } else {
+
+                    // Compute azimut because elevation is 0
+                    const phi = gisement(observation, coord_base);
+                    
+                    // Push orientation and elevation at 0 in the profile
+                    element[i].elevation = 0.0;
+                    element[i].phi = phi;
+
+                }
             }
             else {
                 // Insert value for the first point in the profile
                 element[i].elevation = 0.0;
-                element[i].elevation = 0.0;
+                element[i].phi = 0.0;
                 firstIteration = false;
             }
         })
@@ -67,7 +107,7 @@ export function elevation(results, coord_base, height_instrument){
  * @param {Array} data 
  * @returns 
  */
-export function elevation_max(data){
+export function maxElevation(data){
 
     const mask_elevation = [];
     data.forEach(profile => {
@@ -78,32 +118,24 @@ export function elevation_max(data){
         // Find the hight value of elevation in the list
         const max_elevation = Math.max(...list_elevation);
 
-        // TODO: comment        
-        if ( max_elevation <= 0.0){
+        let obser_max_elevation;
 
-            const temp = {}
+        // TODO:      
+        if ( max_elevation === 0.0){
 
-            // Compute point launched
-            const azimut = profile[1].azimut;
-            const point_start = [profile[0].easting, profile[1].northing];
-            const point_end = point_launched(point_start, azimut)
-
-            temp.elevation = 0.0;
-            temp.azimut = azimut;
-            temp.easting = point_end[0];
-            temp.northing = point_end[1];
-            mask_elevation.push(temp);
-
+            // Take a value in a profile just for the orientation
+            obser_max_elevation = profile[50];
+            
         } else {
             // Find the index of the place for the max elevation
             const index_max_value = list_elevation.findIndex(value => value === max_elevation);
 
             // Get Object in response array
-            const obser_max_elevation = profile[index_max_value];
+            obser_max_elevation = profile[index_max_value];
 
-            // Push the observation in the list
-            mask_elevation.push(obser_max_elevation);
         }
+        // Push the observation in the list
+        mask_elevation.push(obser_max_elevation);
     });
     return mask_elevation;
 }

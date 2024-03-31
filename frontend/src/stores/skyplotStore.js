@@ -55,7 +55,10 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
           name: 'Satellites',
           type: 'scatter',
           data: []
-        }]
+        }],
+        legend: {
+          enabled: false
+        }
       });
     },
 
@@ -85,6 +88,7 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
     },
 
     drawSatsOnSykPlot_traj(dataSatJSON) {
+      console.log("ici 2");
       const data_constellation = {}
 
       // Create object general with list for position's satellite
@@ -117,6 +121,25 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
         })
       })
       console.log("data_const", data_constellation);
+
+      // Display trajectory satellite
+      for (const constel in data_constellation){
+        
+        for (const sat in data_constellation[constel]){
+          if (this.chart) {
+            this.chart.addSeries({
+              //name: sat,
+              type: 'line',
+              color: colorsSats[constel],
+              data: data_constellation[constel][sat],
+              lineWidth: 1,
+              marker: {
+                enabled: false
+              }
+            });
+          }
+        }
+      }
     },
 
     drawSatsOnSykPlot(dataSatJSON) {

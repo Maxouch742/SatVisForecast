@@ -1,6 +1,7 @@
 // store/mapStore.js
 import { defineStore } from 'pinia';
-
+import { boundingExtent, buffer } from 'ol/extent';
+import { View } from 'ol';
 
 // handle things to do with the map ! 
 export const useMapStore = defineStore('map', {
@@ -20,8 +21,8 @@ export const useMapStore = defineStore('map', {
       this.addLineLayer = method;
     },
     setClearMapLayers(clearLayersFunction) {
-        this.clearMapLayers = clearLayersFunction;
-      },
+      this.clearMapLayers = clearLayersFunction;
+    },
 
     // set the invoking methods (to really DO the things)
     invokeAddLineLayer(coordinates) {
@@ -31,13 +32,21 @@ export const useMapStore = defineStore('map', {
         console.error('addLineLayer method is not set.');
       }
     },
-    invokeClearMapLayers() {
-        if (this.addLineLayer) {
-          this.clearMapLayers();
-        } else {
-          console.error('clearMapLayers method is not set.');
-        }
-      },
 
+    invokeClearMapLayers() {
+      if (this.addLineLayer) {
+        this.clearMapLayers();
+      } else {
+        console.error('clearMapLayers method is not set.');
+      }
+    },
+
+    invokeZoomExtend(coordinates) {
+      const extentProject = boundingExtent(coordinates);
+      const bufferProject = buffer(extentProject, 75);
+      this.map.setView(new View({
+        extent: bufferProject
+      }))
+    },
   }
 });

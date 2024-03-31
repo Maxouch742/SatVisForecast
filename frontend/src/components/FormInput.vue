@@ -122,6 +122,7 @@ export default {
         const point = [element.easting, element.northing];
         response.push(point);
       })
+      response.push([data[0].easting, data[1].northing]);
 
       return response;
     },
@@ -302,7 +303,8 @@ export default {
       mapStore.invokeClearMapLayers();
       // drawing line on 2D-map
       mapStore.invokeAddLineLayer(listENofRelief);
-
+      // Extend map on feature
+      //TODO: mapStore.invokeZoomExtend(listENofRelief);
 
 
 

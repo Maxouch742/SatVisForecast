@@ -56,9 +56,11 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
           type: 'scatter',
           data: []
         }],
+        /*
         legend: {
           enabled: false
         }
+        */
       });
     },
 
@@ -127,11 +129,11 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
         if (constel === "GPS"){
         
           for (const sat in data_constellation[constel]){
+            console.log(sat, data_constellation[constel][sat]);
             if (this.chart) {
               this.chart.addSeries({
                 name: sat,
                 type: 'line',
-                // color: colorsSats[constel],
                 data: data_constellation[constel][sat],
                 lineWidth: 1,
                 marker: {
@@ -163,7 +165,7 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
                 color: colorsSats[constellation],
                 data: seriesData[constellation],
                 marker: {
-                symbol: 'circle'
+                  symbol: 'circle'
                 }
             });
             }

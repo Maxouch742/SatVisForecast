@@ -124,19 +124,21 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
 
       // Display trajectory satellite
       for (const constel in data_constellation){
+        if (constel === "GPS"){
         
-        for (const sat in data_constellation[constel]){
-          if (this.chart) {
-            this.chart.addSeries({
-              //name: sat,
-              type: 'line',
-              color: colorsSats[constel],
-              data: data_constellation[constel][sat],
-              lineWidth: 1,
-              marker: {
-                enabled: false
-              }
-            });
+          for (const sat in data_constellation[constel]){
+            if (this.chart) {
+              this.chart.addSeries({
+                name: sat,
+                type: 'line',
+                // color: colorsSats[constel],
+                data: data_constellation[constel][sat],
+                lineWidth: 1,
+                marker: {
+                  enabled: false
+                }
+              });
+            }
           }
         }
       }

@@ -150,6 +150,7 @@ export default {
             
             // Recover user-recorded date and time
             const date = new Date(JSONrequest.datetime);
+            console.log("DATEEEEE", date);
 
             // Get receiver's position
             const obs_position = {
@@ -175,14 +176,19 @@ export default {
             // Create return response
             const response_result = [];
 
-            // Range date on 24 hours (1 day)
-            for (let i=0; i<24; i++){
+            // Range date on 6 hours
+            for (let i=0; i<6; i++){
 
               // Create new date
-              const newDate = date.setHours(date.getHours() + i);
+              //const newDate = date.setHours(date.getMinutes() + (i*30));
+              const newDate = new Date(date.getTime() + (i * 60 * 60 * 1000)); // Ajouter une heure
+              console.log(newDate);
+              
 
               // Compute position's SV
-              const res = compute_satellite(obs_position, date, tle_message);
+              const res = compute_satellite(obs_position, newDate, tle_message);
+              console.log(res)
+
               const temp = {}
               temp.date = newDate;
               temp.data = res;
@@ -279,7 +285,7 @@ export default {
       // SATELITTE SCATTER 
       // -----------------
       const dataSatellite = await this.getSatelittes(JSONrequest);
-      const dataSatellite_last = dataSatellite.slice(-1);
+      //const dataSatellite_last = dataSatellite.slice(-1);
 
 
       // PLOT ELEMENTS ON POLAR CHARTS
@@ -287,7 +293,7 @@ export default {
       const listAziElevOfRelief = await this.responseToListsAziElev(dataTopoMask);
       const skyPlotStore = useSkyPlotStore(); // get the stored chart first
       skyPlotStore.removeAllSeries(); // delete existing data first
-      skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);  
+      // skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);  
       skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite);
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
 

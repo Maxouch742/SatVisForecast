@@ -33,7 +33,7 @@ export function point_launched(coord_sta, angle){
 function gisement(observation, coordinates){
     const delta_E = observation.easting - coordinates[0];
     const delta_N = observation.northing - coordinates[1];
-    let phi = Math.atan2(delta_N, delta_E) * RAD2DEG;
+    let phi = Math.atan2(delta_E, delta_N) * RAD2DEG;
     if (phi < 0){ phi += 360.0 }
     return phi;
 }

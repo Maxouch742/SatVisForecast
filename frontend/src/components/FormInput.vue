@@ -80,6 +80,7 @@
               <input type="radio" name="constellation" value="QZSS" @click="addConstellation" />
               QZSS
             </label>
+
           </div>
         </div>
       </div>
@@ -169,9 +170,7 @@ export default {
 
       // Browse data for get azimut and elevation
       dataStringAziElev.forEach(element => {
-        let azimut = element.phi + 90.0;
-        if (azimut < 0.0) { azimut += 360 }
-        if (azimut > 360) { azimut -= 360 }
+        let azimut = element.phi;
         const point = [azimut, element.elevation];
         response.push(point);
       })
@@ -321,6 +320,7 @@ export default {
       // ---------------
       const dataTopoMask = await this.getTopography(JSONrequest);
       this.responseDataMask = dataTopoMask;
+      console.log(dataTopoMask);
 
       // SATELITTE SCATTER 
       // -----------------

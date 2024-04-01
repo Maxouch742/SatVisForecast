@@ -8,9 +8,20 @@ import Home from './components/Home.vue'
 
 
 const routes = [
-    {path: '/', component: Home},
-    {path: '/home', component: Home},
-    {path: '/about', component: AboutItem},
+    {
+      path: '/',
+      component: Home
+    },
+    {
+      path: '/home', 
+      name: 'Home',
+      component: Home
+    },
+    {
+      path: '/about', 
+      name: 'About project',
+      component: AboutItem
+    },
   ]
 
 const router = createRouter({

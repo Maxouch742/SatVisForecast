@@ -2,7 +2,7 @@
   <div class="container grey-container">
     <div class="columns is-multiline">
       <!-- Use is-one-fifth to make 5 elements fit in one row -->
-      <div class="column is-one-fifth"> 
+      <div class="column is-one-fifth">
         <div class="field">
           <label class="label">Easting [m]</label>
           <div class="control">
@@ -22,7 +22,8 @@
         <div class="field">
           <label class="label">Instrument height [m]</label>
           <div class="control">
-            <input class="input" id="instrumentHeight" v-model="instrumentHeight" type="number" step="0.1" placeholder="Instrument height [m]">
+            <input class="input" id="instrumentHeight" v-model="instrumentHeight" type="number" step="0.1"
+              placeholder="Instrument height [m]">
           </div>
         </div>
       </div>
@@ -30,7 +31,8 @@
         <div class="field">
           <label class="label">Elevation mask [°]</label>
           <div class="control">
-            <input class="input" id="elevationMask" v-model="elevationMask" type="number" step="0.1" placeholder="Elevation mask [°]">
+            <input class="input" id="elevationMask" v-model="elevationMask" type="number" step="0.1"
+              placeholder="Elevation mask [°]">
           </div>
         </div>
       </div>
@@ -47,6 +49,37 @@
         <div class="field">
           <div class="control">
             <button class="button is-link is-fullwidth" @click="getGNSSvisibility">Get GNSS visibility</button>
+          </div>
+        </div>
+      </div>
+      <!-- Radiobutton for (sky)plot constellation -->
+      <div class="column is-full">
+        <div class="field">
+          <div class="control">
+            <label class="radio">
+              <input type="radio" name="constellation" value="GPS" @click="addConstellation" checked />
+              GPS
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="GLONASS" @click="addConstellation" />
+              GLONASS
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="GALILEO" @click="addConstellation" />
+              GALILEO
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="BEIDOU" @click="addConstellation" />
+              BEIDOU
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="IRNSS" @click="addConstellation" />
+              IRNSS
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="QZSS" @click="addConstellation" />
+              QZSS
+            </label>
           </div>
         </div>
       </div>
@@ -88,12 +121,14 @@ export default {
       datetime: utc1Time.toISOString().slice(0, 16), // Sets datetime to the current date and time in UTC+1
       instrumentHeight: 1.70,
       elevationMask: 5.0,
-      response: null
+      response: null,
+      responseDataMask: null,
+      responseDataSatellite: null,
     };
   },
 
   methods: {
-    
+
     async fetchHeight() {
 
       // method to fetch simple altitude from CH geo admin API
@@ -113,7 +148,7 @@ export default {
 
     },
 
-    async responseToListEastNorth(data){
+    async responseToListEastNorth(data) {
       // Create list for return
       const response = [];
 
@@ -127,7 +162,7 @@ export default {
       return response;
     },
 
-    async responseToListsAziElev(dataStringAziElev){
+    async responseToListsAziElev(dataStringAziElev) {
 
       // Create list for return response
       const response = [];
@@ -135,8 +170,8 @@ export default {
       // Browse data for get azimut and elevation
       dataStringAziElev.forEach(element => {
         let azimut = element.phi + 90.0;
-        if (azimut < 0.0){ azimut += 360 }
-        if (azimut > 360){ azimut -= 360 }
+        if (azimut < 0.0) { azimut += 360 }
+        if (azimut > 360) { azimut -= 360 }
         const point = [azimut, element.elevation];
         response.push(point);
       })
@@ -144,64 +179,65 @@ export default {
     },
 
     async getSatelittes(JSONrequest) {
-        try {
+      try {
 
-            // Download TLE Message
-            const tle_message = await TleSatellite('json');
-            
-            // Recover user-recorded date and time
-            const date = new Date(JSONrequest.datetime);
+        // Download TLE Message
+        const tle_message = await TleSatellite('json');
 
-            // Get receiver's position
-            const obs_position = {
-                "east": JSONrequest.E,
-                "north": JSONrequest.N,
-                "height_NF02": JSONrequest.H
-            };
+        // Recover user-recorded date and time
+        const date = new Date(JSONrequest.datetime);
 
-            // Compute position WGS84 from MN95 position
-            const height_bessel = await nf02ToBessel(obs_position.east, obs_position.north, obs_position.height_NF02);
-            
-            // Add element to observator Object
-            obs_position.height_bessel = parseFloat(height_bessel.altitude);
+        // Get receiver's position
+        const obs_position = {
+          "east": JSONrequest.E,
+          "north": JSONrequest.N,
+          "height_NF02": JSONrequest.H
+        };
 
-            // MN95/Bessel to WGS84:
-            const wgs84 = await mn95ToWgs84(obs_position.east, obs_position.north, obs_position.height_bessel);
-            
-            // Add element to observator Object
-            obs_position.latitude = parseFloat(wgs84.easting);
-            obs_position.longitude = parseFloat(wgs84.northing);
-            obs_position.height = parseFloat(wgs84.altitude);
+        // Compute position WGS84 from MN95 position
+        const height_bessel = await nf02ToBessel(obs_position.east, obs_position.north, obs_position.height_NF02);
 
-            // Create return response
-            const response_result = [];
+        // Add element to observator Object
+        obs_position.height_bessel = parseFloat(height_bessel.altitude);
 
-            // Range date on 24 hours (1 day)
-            for (let i=0; i<24; i++){
+        // MN95/Bessel to WGS84:
+        const wgs84 = await mn95ToWgs84(obs_position.east, obs_position.north, obs_position.height_bessel);
 
-              // Create new date
-              const newDate = date.setHours(date.getHours() + i);
+        // Add element to observator Object
+        obs_position.latitude = parseFloat(wgs84.easting);
+        obs_position.longitude = parseFloat(wgs84.northing);
+        obs_position.height = parseFloat(wgs84.altitude);
 
-              // Compute position's SV
-              const res = compute_satellite(obs_position, date, tle_message);
-              const temp = {}
-              temp.date = newDate;
-              temp.data = res;
-              //console.log("res", res);
-              response_result.push(temp);
+        // Create return response
+        const response_result = [];
 
-            }
-            //console.log("Data with hours", response_result)
-            
+        // Range date on 6 hours
+        for (let i = 0; i < 6; i++) {
 
-            // Compute position's SV
-            //const res = compute_satellite(obs_position, date, tle_message);
-            return response_result;
+          // Create new date
+          //const newDate = date.setHours(date.getMinutes() + (i*30));
+          const newDate = new Date(date.getTime() + (i * 60 * 60 * 1000)); // Ajouter une heure
 
-        } catch (error) {
-            console.log("ERROR", error);
-            throw error; // Rethrow the error so that it can be caught by the caller
+          // Compute position's SV
+          const res = compute_satellite(obs_position, newDate, tle_message);
+
+          const temp = {}
+          temp.date = newDate;
+          temp.data = res;
+          response_result.push(temp);
+
         }
+        //console.log("Data with hours", response_result)
+
+
+        // Compute position's SV
+        //const res = compute_satellite(obs_position, date, tle_message);
+        return response_result;
+
+      } catch (error) {
+        console.log("ERROR", error);
+        throw error; // Rethrow the error so that it can be caught by the caller
+      }
     },
 
 
@@ -210,18 +246,18 @@ export default {
      * 
      * @param {Object} JSONrequest 
      */
-    async getTopography(JSONrequest){
+    async getTopography(JSONrequest) {
 
       try {
 
         // Reforme in object
-        const coord_start = [ JSONrequest.E, JSONrequest.N ];
+        const coord_start = [JSONrequest.E, JSONrequest.N];
         const height_instrument = JSONrequest.instrumentHeight;
 
         const tabpromise = [];
 
         // Iteration, on angles from 0 to 359
-        for (let i=0; i<360; i++){
+        for (let i = 0; i < 360; i++) {
           const coord_end = point_launched(coord_start, i);
           const profile = request_profile(coord_start, coord_end);
           tabpromise.push(profile);
@@ -229,18 +265,16 @@ export default {
 
         // Calculate elevation as soon as all requests have been passed.
         return Promise.all(tabpromise).then(results => {
-            const data = calcElevation(results, coord_start, height_instrument);
-            const mask = maxElevation(data);
-            return mask;
+          const data = calcElevation(results, coord_start, height_instrument);
+          const mask = maxElevation(data);
+          return mask;
         });
 
-      } catch(error){
+      } catch (error) {
         console.log("ERROR", error);
         throw error; // Rethrow the error so that it can be caught by the caller
       }
     },
-
-
 
     async getGNSSvisibility() {
 
@@ -266,7 +300,18 @@ export default {
         'instrumentHeight': this.instrumentHeight,
         'elevationMask': this.elevationMask,
         'datetime': this.datetime
-      };      
+      };
+
+      // ===============================
+      // === Get radioButton checked ===
+      // ===============================
+      const input = document.getElementsByName('constellation');
+      let constellation_user = 0;
+      for (let i = 0; i < input.length; i++) {
+        if (input[i].checked) {
+          constellation_user = input[i].value;
+        }
+      }
 
       // ==============================
       // === DRAW THE POLAR SKYPLOT ===
@@ -275,12 +320,14 @@ export default {
       // TOPOGRAPHY MASK
       // ---------------
       const dataTopoMask = await this.getTopography(JSONrequest);
+      this.responseDataMask = dataTopoMask;
       console.log(dataTopoMask);
 
       // SATELITTE SCATTER 
       // -----------------
       const dataSatellite = await this.getSatelittes(JSONrequest);
-      const dataSatellite_last = dataSatellite.slice(-1);
+      this.responseDataSatellite = dataSatellite;
+      //const dataSatellite_last = dataSatellite.slice(-1);
 
 
       // PLOT ELEMENTS ON POLAR CHARTS
@@ -288,7 +335,8 @@ export default {
       const listAziElevOfRelief = await this.responseToListsAziElev(dataTopoMask);
       const skyPlotStore = useSkyPlotStore(); // get the stored chart first
       skyPlotStore.removeAllSeries(); // delete existing data first
-      skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);  
+      //skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);
+      skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite, constellation_user);
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
 
 
@@ -303,37 +351,46 @@ export default {
       mapStore.invokeClearMapLayers();
       // drawing line on 2D-map
       mapStore.invokeAddLineLayer(listENofRelief);
-      // Extend map on feature
-      //TODO: mapStore.invokeZoomExtend(listENofRelief);
-
-
-
-
-
-
-
     },
 
+    async addConstellation() {
 
-  
+      //Get radioButton checked
+      const input = document.getElementsByName('constellation');
+      let constel = 0;
+      for (let i = 0; i < input.length; i++) {
+        if (input[i].checked) {
+          constel = input[i].value;
+        }
+      }
+
+      // Modify skyplot
+      const listAziElevOfRelief = await this.responseToListsAziElev(this.responseDataMask);
+      const skyPlotStore = useSkyPlotStore(); // get the stored chart first
+      skyPlotStore.removeAllSeries(); // delete existing data first
+      skyPlotStore.drawSatsOnSykPlot_traj(this.responseDataSatellite, constel);
+      skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
+    }
   }
 }
 </script>
 
 <style>
-  .grey-container {
-    padding: 20px;
-    background-color: lightgrey;
-    border-radius: 10px;
-  }
-  .label:not(:last-child) {
-    margin-bottom: 0.0em !important;
-  }
-  .column {
-      display: block;
-      flex-basis: 0;
-      flex-grow: 1;
-      flex-shrink: 1;
-      padding: 0.3rem !important;
-  }
+.grey-container {
+  padding: 20px;
+  background-color: lightgrey;
+  border-radius: 10px;
+}
+
+.label:not(:last-child) {
+  margin-bottom: 0.0em !important;
+}
+
+.column {
+  display: block;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 0.3rem !important;
+}
 </style>

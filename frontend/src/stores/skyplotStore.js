@@ -19,22 +19,6 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
     chart: null, // Pour stocker l'instance du graphique
   }),
   actions: {
-    drawReliefOnSkyPlot(listAziElevOfRelief) {
-
-      if (this.chart) {
-        this.chart.addSeries({
-          name: 'Topography mask',
-          type: 'area',
-          data: listAziElevOfRelief,
-          color: 'gray',
-          fillColor: 'rgba(128, 128, 128, 0.3)', // Gris transparent
-          lineWidth: 1,
-          marker: {
-            enabled: false
-          }
-        });
-      }
-    },
     initializeChart(containerId) {
       this.chart = Highcharts.chart(containerId, {
         chart: {
@@ -71,12 +55,14 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
           name: 'Satellites',
           type: 'scatter',
           data: []
-        }]
+        }],
+        legend: {
+          align: 'right',
+          verticalAlign: 'center',
+          layout: 'vertical',
+        }
       });
     },
-
-    
-
 
     removeAllSeries() {
         if (this.chart) {
@@ -86,8 +72,88 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
         }
     },
 
+    drawReliefOnSkyPlot(listAziElevOfRelief) {
+
+      if (this.chart) {
+        this.chart.addSeries({
+          name: 'Topography mask',
+          type: 'area',
+          data: listAziElevOfRelief,
+          color: 'gray',
+          fillColor: 'rgba(128, 128, 128, 0.3)', // Gris transparent
+          lineWidth: 1,
+          marker: {
+            enabled: false
+          }
+        });
+      }
+    },
+
+    drawSatsOnSykPlot_traj(dataSatJSON, constellation_user) {
+      const data_constellation = {}
+
+      // Create object general with list for position's satellite
+      dataSatJSON.forEach(element => {
+
+        const data = element.data;
+        data.forEach( sat => {
+
+          const constellation = sat.constellation;
+
+          if ( (constellation in data_constellation) === false){
+            
+            // Add constellation, satellite and position
+            data_constellation[constellation] = {};
+            data_constellation[constellation][sat.name] = [ [sat.azimut, sat.elevation] ];
+
+          } else {
+
+            const const_data = data_constellation[constellation];
+
+            if ( (sat.name in const_data) === false){
+              // add satellite and position
+              const_data[sat.name] = [[sat.azimut, sat.elevation]];
+            }
+            else {
+              // Add position
+              const_data[sat.name].push( [sat.azimut, sat.elevation] );
+            }
+          }
+        })
+      })
+
+      // Display trajectory satellite
+      for (const constel in data_constellation){
+        if (constel === constellation_user){
+        
+          for (const sat in data_constellation[constel]){
+
+            // Add data inversed for plot curve trajectory
+            let data = data_constellation[constel][sat];
+            const data_inv = [];
+            for (let i=data.length-1; i >= 0; i--){
+              data_inv.push(data[i])
+            }
+            data = data.concat(data_inv);
+            data_constellation[constel][sat] = data;
+
+            if (this.chart) {
+              this.chart.addSeries({
+                name: sat,
+                type: 'line',
+                data: data_constellation[constel][sat],
+                lineWidth: 1,
+                marker: {
+                  enabled: false
+                }
+              });
+            }
+          }
+        }
+      }
+    },
+
     drawSatsOnSykPlot(dataSatJSON) {
-      console.log('ici')
         const seriesData = dataSatJSON.reduce((acc, sat) => {
             if (!acc[sat.constellation]) {
             acc[sat.constellation] = [];
@@ -105,15 +171,11 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
                 color: colorsSats[constellation],
                 data: seriesData[constellation],
                 marker: {
-                symbol: 'circle'
+                  symbol: 'circle'
                 }
             });
             }
         }
     },
-
-
-
-
   }
 });

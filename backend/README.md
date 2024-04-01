@@ -31,7 +31,7 @@ Le script python est configuré afin de fonctionner en Backend avec une solution
 ### Les données de base pour le calcul
 
 L'API d'extraction du masque d'observation fonctionne avec 
-```
+```json
 {
     "east": "2581190",
     "nord": "1119010",

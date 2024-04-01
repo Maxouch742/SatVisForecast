@@ -57,7 +57,9 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
           data: []
         }],
         legend: {
-          enabled: false
+          align: 'right',
+          verticalAlign: 'center',
+          layout: 'vertical',
         }
       });
     },
@@ -88,7 +90,6 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
     },
 
     drawSatsOnSykPlot_traj(dataSatJSON, constellation_user) {
-      console.log("OK")
       const data_constellation = {}
 
       // Create object general with list for position's satellite

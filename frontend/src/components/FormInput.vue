@@ -362,7 +362,6 @@ export default {
           constel = input[i].value;
         }
       }
-      console.log(constel);
 
       // Modify skyplot
       const listAziElevOfRelief = await this.responseToListsAziElev(this.responseDataMask);
@@ -370,7 +369,6 @@ export default {
       skyPlotStore.removeAllSeries(); // delete existing data first
       skyPlotStore.drawSatsOnSykPlot_traj(this.responseDataSatellite, constel);
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
-
     }
   }
 }

@@ -23,7 +23,7 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
       this.chart = Highcharts.chart(containerId, {
         chart: {
           polar: true,
-          type: 'scatter'
+          //type: 'scatter'
         },
         title: {
           text: 'Skyplot'
@@ -49,6 +49,11 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
           reversed: true,
           title: {
             text: 'Elevation'
+          },
+          labels: {
+            formatter: function () {
+              return this.value + '°';
+            }
           }
         },
         series: [{
@@ -60,7 +65,11 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
           align: 'right',
           verticalAlign: 'center',
           layout: 'vertical',
-        }
+        },
+        tooltip: {
+          enabled: true,
+          followPointer: true,
+        },
       });
     },
 
@@ -82,6 +91,30 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
           color: 'gray',
           fillColor: 'rgba(128, 128, 128, 0.3)', // Gris transparent
           lineWidth: 1,
+          marker: {
+            enabled: false
+          }
+        });
+      }
+    },
+
+    drawMaskElevetionOnSkyPlot(angle) {
+
+      // Create data
+      const data = []
+      for (let i=0; i<360; i++){
+        data.push([i, angle])
+      }
+
+      // Add data
+      if (this.chart) {
+        this.chart.addSeries({
+          name: 'Elevation mask',
+          type: 'line',
+          data: data,
+          color: 'red',
+          lineWidth: 1,
+          dashStyle: 'dash',
           marker: {
             enabled: false
           }
@@ -144,7 +177,7 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
                 data: data_constellation[constel][sat],
                 lineWidth: 1,
                 marker: {
-                  enabled: false
+                  enabled: true
                 }
               });
             }

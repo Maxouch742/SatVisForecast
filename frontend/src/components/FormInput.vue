@@ -338,6 +338,7 @@ export default {
       //skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);
       skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite, constellation_user);
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
+      skyPlotStore.drawMaskElevetionOnSkyPlot(this.elevationMask);
 
 
 

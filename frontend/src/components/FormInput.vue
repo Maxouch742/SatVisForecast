@@ -52,6 +52,37 @@
           </div>
         </div>
       </div>
+      <!-- Radiobutton for (sky)plot constellation -->
+      <div class="column is-full">
+        <div class="field">
+          <div class="control">
+            <label class="radio">
+              <input type="radio" name="constellation" value="GPS" @click="addConstellation" checked />
+              GPS
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="GLONASS" @click="addConstellation" />
+              GLONASS
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="GALILEO" @click="addConstellation" />
+              GALILEO
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="BEIDOU" @click="addConstellation" />
+              BEIDOU
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="IRNSS" @click="addConstellation" />
+              IRNSS
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="QZSS" @click="addConstellation" />
+              QZSS
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -90,7 +121,9 @@ export default {
       datetime: utc1Time.toISOString().slice(0, 16), // Sets datetime to the current date and time in UTC+1
       instrumentHeight: 1.70,
       elevationMask: 5.0,
-      response: null
+      response: null,
+      responseDataMask: null,
+      responseDataSatellite: null,
     };
   },
 
@@ -242,8 +275,6 @@ export default {
       }
     },
 
-
-
     async getGNSSvisibility() {
 
       // MAIN PROCESS CLIENT-SIDE (WHEN 'GET' IS CLICKED)
@@ -270,6 +301,17 @@ export default {
         'datetime': this.datetime
       };
 
+      // ===============================
+      // === Get radioButton checked ===
+      // ===============================
+      const input = document.getElementsByName('constellation');
+      let constellation_user = 0;
+      for (let i = 0; i < input.length; i++) {
+        if (input[i].checked) {
+          constellation_user = input[i].value;
+        }
+      }
+
       // ==============================
       // === DRAW THE POLAR SKYPLOT ===
       // ==============================
@@ -277,12 +319,14 @@ export default {
       // TOPOGRAPHY MASK
       // ---------------
       const dataTopoMask = await this.getTopography(JSONrequest);
+      this.responseDataMask = dataTopoMask;
       console.log(dataTopoMask);
 
       // SATELITTE SCATTER 
       // -----------------
       const dataSatellite = await this.getSatelittes(JSONrequest);
-      const dataSatellite_last = dataSatellite.slice(-1);
+      this.responseDataSatellite = dataSatellite;
+      //const dataSatellite_last = dataSatellite.slice(-1);
 
 
       // PLOT ELEMENTS ON POLAR CHARTS
@@ -290,8 +334,8 @@ export default {
       const listAziElevOfRelief = await this.responseToListsAziElev(dataTopoMask);
       const skyPlotStore = useSkyPlotStore(); // get the stored chart first
       skyPlotStore.removeAllSeries(); // delete existing data first
-      skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);
-      skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite);
+      //skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);
+      skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite, constellation_user);
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
 
 
@@ -306,14 +350,28 @@ export default {
       mapStore.invokeClearMapLayers();
       // drawing line on 2D-map
       mapStore.invokeAddLineLayer(listENofRelief);
-
-      // ==============================
-      // === PLOT NUMBER SATELLITES ===
-      // ==============================
-
-
-
     },
+
+    async addConstellation() {
+
+      //Get radioButton checked
+      const input = document.getElementsByName('constellation');
+      let constel = 0;
+      for (let i = 0; i < input.length; i++) {
+        if (input[i].checked) {
+          constel = input[i].value;
+        }
+      }
+      console.log(constel);
+
+      // Modify skyplot
+      const listAziElevOfRelief = await this.responseToListsAziElev(this.responseDataMask);
+      const skyPlotStore = useSkyPlotStore(); // get the stored chart first
+      skyPlotStore.removeAllSeries(); // delete existing data first
+      skyPlotStore.drawSatsOnSykPlot_traj(this.responseDataSatellite, constel);
+      skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
+
+    }
   }
 }
 </script>

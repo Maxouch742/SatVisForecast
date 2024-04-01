@@ -87,7 +87,7 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
       }
     },
 
-    drawSatsOnSykPlot_traj(dataSatJSON) {
+    drawSatsOnSykPlot_traj(dataSatJSON, constellation_user) {
       console.log("OK")
       const data_constellation = {}
 
@@ -122,9 +122,8 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
       })
 
       // Display trajectory satellite
-      console.log(data_constellation);
       for (const constel in data_constellation){
-        if (constel === "GPS"){
+        if (constel === constellation_user){
         
           for (const sat in data_constellation[constel]){
 
@@ -136,7 +135,6 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
             }
             data = data.concat(data_inv);
             data_constellation[constel][sat] = data;
-            console.log(sat, data);
 
             if (this.chart) {
               this.chart.addSeries({

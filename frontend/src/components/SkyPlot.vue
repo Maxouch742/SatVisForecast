@@ -6,7 +6,6 @@
   
   <script>
   import Highcharts from 'highcharts';
-// import { none } from 'ol/centerconstraint';
   require('highcharts/modules/exporting')(Highcharts);
   require('highcharts/highcharts-more')(Highcharts);
   import { useSkyPlotStore } from '@/stores/skyplotStore';

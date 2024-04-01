@@ -2,7 +2,7 @@
   <div class="container grey-container">
     <div class="columns is-multiline">
       <!-- Use is-one-fifth to make 5 elements fit in one row -->
-      <div class="column is-one-fifth"> 
+      <div class="column is-one-fifth">
         <div class="field">
           <label class="label">Easting [m]</label>
           <div class="control">
@@ -22,7 +22,8 @@
         <div class="field">
           <label class="label">Instrument height [m]</label>
           <div class="control">
-            <input class="input" id="instrumentHeight" v-model="instrumentHeight" type="number" step="0.1" placeholder="Instrument height [m]">
+            <input class="input" id="instrumentHeight" v-model="instrumentHeight" type="number" step="0.1"
+              placeholder="Instrument height [m]">
           </div>
         </div>
       </div>
@@ -30,7 +31,8 @@
         <div class="field">
           <label class="label">Elevation mask [°]</label>
           <div class="control">
-            <input class="input" id="elevationMask" v-model="elevationMask" type="number" step="0.1" placeholder="Elevation mask [°]">
+            <input class="input" id="elevationMask" v-model="elevationMask" type="number" step="0.1"
+              placeholder="Elevation mask [°]">
           </div>
         </div>
       </div>
@@ -93,7 +95,7 @@ export default {
   },
 
   methods: {
-    
+
     async fetchHeight() {
 
       // method to fetch simple altitude from CH geo admin API
@@ -113,7 +115,7 @@ export default {
 
     },
 
-    async responseToListEastNorth(data){
+    async responseToListEastNorth(data) {
       // Create list for return
       const response = [];
 
@@ -126,7 +128,7 @@ export default {
       return response;
     },
 
-    async responseToListsAziElev(dataStringAziElev){
+    async responseToListsAziElev(dataStringAziElev) {
 
       // Create list for return response
       const response = [];
@@ -134,8 +136,8 @@ export default {
       // Browse data for get azimut and elevation
       dataStringAziElev.forEach(element => {
         let azimut = element.phi + 90.0;
-        if (azimut < 0.0){ azimut += 360 }
-        if (azimut > 360){ azimut -= 360 }
+        if (azimut < 0.0) { azimut += 360 }
+        if (azimut > 360) { azimut -= 360 }
         const point = [azimut, element.elevation];
         response.push(point);
       })
@@ -143,66 +145,65 @@ export default {
     },
 
     async getSatelittes(JSONrequest) {
-        try {
+      try {
 
-            // Download TLE Message
-            const tle_message = await TleSatellite('json');
-            
-            // Recover user-recorded date and time
-            const date = new Date(JSONrequest.datetime);
-            console.log("DATEEEEE", date);
+        // Download TLE Message
+        const tle_message = await TleSatellite('json');
 
-            // Get receiver's position
-            const obs_position = {
-                "east": JSONrequest.E,
-                "north": JSONrequest.N,
-                "height_NF02": JSONrequest.H
-            };
+        // Recover user-recorded date and time
+        const date = new Date(JSONrequest.datetime);
 
-            // Compute position WGS84 from MN95 position
-            const height_bessel = await nf02ToBessel(obs_position.east, obs_position.north, obs_position.height_NF02);
-            
-            // Add element to observator Object
-            obs_position.height_bessel = parseFloat(height_bessel.altitude);
+        // Get receiver's position
+        const obs_position = {
+          "east": JSONrequest.E,
+          "north": JSONrequest.N,
+          "height_NF02": JSONrequest.H
+        };
 
-            // MN95/Bessel to WGS84:
-            const wgs84 = await mn95ToWgs84(obs_position.east, obs_position.north, obs_position.height_bessel);
-            
-            // Add element to observator Object
-            obs_position.latitude = parseFloat(wgs84.easting);
-            obs_position.longitude = parseFloat(wgs84.northing);
-            obs_position.height = parseFloat(wgs84.altitude);
+        // Compute position WGS84 from MN95 position
+        const height_bessel = await nf02ToBessel(obs_position.east, obs_position.north, obs_position.height_NF02);
 
-            // Create return response
-            const response_result = [];
+        // Add element to observator Object
+        obs_position.height_bessel = parseFloat(height_bessel.altitude);
 
-            // Range date on 6 hours
-            for (let i=0; i<6; i++){
+        // MN95/Bessel to WGS84:
+        const wgs84 = await mn95ToWgs84(obs_position.east, obs_position.north, obs_position.height_bessel);
 
-              // Create new date
-              //const newDate = date.setHours(date.getMinutes() + (i*30));
-              const newDate = new Date(date.getTime() + (i * 60 * 60 * 1000)); // Ajouter une heure
-              
-              // Compute position's SV
-              const res = compute_satellite(obs_position, newDate, tle_message);
+        // Add element to observator Object
+        obs_position.latitude = parseFloat(wgs84.easting);
+        obs_position.longitude = parseFloat(wgs84.northing);
+        obs_position.height = parseFloat(wgs84.altitude);
 
-              const temp = {}
-              temp.date = newDate;
-              temp.data = res;
-              response_result.push(temp);
+        // Create return response
+        const response_result = [];
 
-            }
-            //console.log("Data with hours", response_result)
-            
+        // Range date on 6 hours
+        for (let i = 0; i < 6; i++) {
 
-            // Compute position's SV
-            //const res = compute_satellite(obs_position, date, tle_message);
-            return response_result;
+          // Create new date
+          //const newDate = date.setHours(date.getMinutes() + (i*30));
+          const newDate = new Date(date.getTime() + (i * 60 * 60 * 1000)); // Ajouter une heure
 
-        } catch (error) {
-            console.log("ERROR", error);
-            throw error; // Rethrow the error so that it can be caught by the caller
+          // Compute position's SV
+          const res = compute_satellite(obs_position, newDate, tle_message);
+
+          const temp = {}
+          temp.date = newDate;
+          temp.data = res;
+          response_result.push(temp);
+
         }
+        //console.log("Data with hours", response_result)
+
+
+        // Compute position's SV
+        //const res = compute_satellite(obs_position, date, tle_message);
+        return response_result;
+
+      } catch (error) {
+        console.log("ERROR", error);
+        throw error; // Rethrow the error so that it can be caught by the caller
+      }
     },
 
 
@@ -211,18 +212,18 @@ export default {
      * 
      * @param {Object} JSONrequest 
      */
-    async getTopography(JSONrequest){
+    async getTopography(JSONrequest) {
 
       try {
 
         // Reforme in object
-        const coord_start = [ JSONrequest.E, JSONrequest.N ];
+        const coord_start = [JSONrequest.E, JSONrequest.N];
         const height_instrument = JSONrequest.instrumentHeight;
 
         const tabpromise = [];
 
         // Iteration, on angles from 0 to 359
-        for (let i=0; i<360; i++){
+        for (let i = 0; i < 360; i++) {
           const coord_end = point_launched(coord_start, i);
           const profile = request_profile(coord_start, coord_end);
           tabpromise.push(profile);
@@ -230,12 +231,12 @@ export default {
 
         // Calculate elevation as soon as all requests have been passed.
         return Promise.all(tabpromise).then(results => {
-            const data = calcElevation(results, coord_start, height_instrument);
-            const mask = maxElevation(data);
-            return mask;
+          const data = calcElevation(results, coord_start, height_instrument);
+          const mask = maxElevation(data);
+          return mask;
         });
 
-      } catch(error){
+      } catch (error) {
         console.log("ERROR", error);
         throw error; // Rethrow the error so that it can be caught by the caller
       }
@@ -267,7 +268,7 @@ export default {
         'instrumentHeight': this.instrumentHeight,
         'elevationMask': this.elevationMask,
         'datetime': this.datetime
-      };      
+      };
 
       // ==============================
       // === DRAW THE POLAR SKYPLOT ===
@@ -289,8 +290,8 @@ export default {
       const listAziElevOfRelief = await this.responseToListsAziElev(dataTopoMask);
       const skyPlotStore = useSkyPlotStore(); // get the stored chart first
       skyPlotStore.removeAllSeries(); // delete existing data first
-      skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);  
-      //skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite);
+      skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);
+      skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite);
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
 
 
@@ -306,35 +307,33 @@ export default {
       // drawing line on 2D-map
       mapStore.invokeAddLineLayer(listENofRelief);
 
-
-
-
-
+      // ==============================
+      // === PLOT NUMBER SATELLITES ===
+      // ==============================
 
 
 
     },
-
-
-  
   }
 }
 </script>
 
 <style>
-  .grey-container {
-    padding: 20px;
-    background-color: lightgrey;
-    border-radius: 10px;
-  }
-  .label:not(:last-child) {
-    margin-bottom: 0.0em !important;
-  }
-  .column {
-      display: block;
-      flex-basis: 0;
-      flex-grow: 1;
-      flex-shrink: 1;
-      padding: 0.3rem !important;
-  }
+.grey-container {
+  padding: 20px;
+  background-color: lightgrey;
+  border-radius: 10px;
+}
+
+.label:not(:last-child) {
+  margin-bottom: 0.0em !important;
+}
+
+.column {
+  display: block;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 0.3rem !important;
+}
 </style>

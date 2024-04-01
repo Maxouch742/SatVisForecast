@@ -56,11 +56,9 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
           type: 'scatter',
           data: []
         }],
-        /*
         legend: {
           enabled: false
         }
-        */
       });
     },
 
@@ -90,7 +88,7 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
     },
 
     drawSatsOnSykPlot_traj(dataSatJSON) {
-      console.log("ici 2");
+      console.log("OK")
       const data_constellation = {}
 
       // Create object general with list for position's satellite
@@ -122,14 +120,24 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
           }
         })
       })
-      console.log("data_const", data_constellation);
 
       // Display trajectory satellite
+      console.log(data_constellation);
       for (const constel in data_constellation){
         if (constel === "GPS"){
         
           for (const sat in data_constellation[constel]){
-            console.log(sat, data_constellation[constel][sat]);
+
+            // Add data inversed for plot curve trajectory
+            let data = data_constellation[constel][sat];
+            const data_inv = [];
+            for (let i=data.length-1; i >= 0; i--){
+              data_inv.push(data[i])
+            }
+            data = data.concat(data_inv);
+            data_constellation[constel][sat] = data;
+            console.log(sat, data);
+
             if (this.chart) {
               this.chart.addSeries({
                 name: sat,
@@ -147,7 +155,6 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
     },
 
     drawSatsOnSykPlot(dataSatJSON) {
-      console.log('ici')
         const seriesData = dataSatJSON.reduce((acc, sat) => {
             if (!acc[sat.constellation]) {
             acc[sat.constellation] = [];
@@ -171,9 +178,5 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
             }
         }
     },
-
-
-
-
   }
 });

@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div id="skyplot-container"></div>
+      <div id="skyplot-container" class="skyplot-cont"></div>
     </div>
   </template>
   
@@ -23,4 +23,12 @@
 
   }
   </script>
+
+
+<style>
+.skyplot-cont{
+  height: 70vh;
+}
+
+</style>
   

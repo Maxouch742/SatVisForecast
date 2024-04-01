@@ -84,6 +84,7 @@ body {
 .cell-form {
   grid-column: 2;
   grid-row: 1;
-  max-width: 67vw
+  max-width: 67vw;
+  padding-right: 6px
 }
 </style>

@@ -57,10 +57,33 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
             }
           }
         },
-        series: [{
+        series: [ // fake legends for init
+        { 
           name: 'Satellites',
           type: 'scatter',
           data: []
+        },
+        {
+          name: 'Elevation mask', 
+          type: 'line',
+          data: [],
+          color: 'red',
+          lineWidth: 1,
+          dashStyle: 'dash',
+          marker: {
+            enabled: false
+          }
+        },
+        {
+          name: 'Topography mask',
+          type: 'area',
+          data: [],
+          color: 'gray',
+          fillColor: 'rgba(128, 128, 128, 0.3)', // gray transparent
+          lineWidth: 1,
+          marker: {
+            enabled: false
+            }
         }],
         legend: {
           align: 'right',

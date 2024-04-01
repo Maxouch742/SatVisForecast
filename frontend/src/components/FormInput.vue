@@ -157,6 +157,7 @@ export default {
         const point = [element.easting, element.northing];
         response.push(point);
       })
+      response.push([data[0].easting, data[1].northing]);
 
       return response;
     },

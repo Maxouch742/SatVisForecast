@@ -356,21 +356,26 @@ export default {
 
     async addConstellation() {
 
-      //Get radioButton checked
-      const input = document.getElementsByName('constellation');
-      let constel = 0;
-      for (let i = 0; i < input.length; i++) {
-        if (input[i].checked) {
-          constel = input[i].value;
-        }
-      }
+      if (this.responseDataMask === null && this.responseDataSatellite === null) {
+        alert("first click on 'Get GNSS visibility'");
+      } else {
 
-      // Modify skyplot
-      const listAziElevOfRelief = await this.responseToListsAziElev(this.responseDataMask);
-      const skyPlotStore = useSkyPlotStore(); // get the stored chart first
-      skyPlotStore.removeAllSeries(); // delete existing data first
-      skyPlotStore.drawSatsOnSykPlot_traj(this.responseDataSatellite, constel);
-      skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
+        //Get radioButton checked
+        const input = document.getElementsByName('constellation');
+        let constel = 0;
+        for (let i = 0; i < input.length; i++) {
+          if (input[i].checked) {
+            constel = input[i].value;
+          }
+        }
+
+        // Modify skyplot
+        const listAziElevOfRelief = await this.responseToListsAziElev(this.responseDataMask);
+        const skyPlotStore = useSkyPlotStore(); // get the stored chart first
+        skyPlotStore.removeAllSeries(); // delete existing data first
+        skyPlotStore.drawSatsOnSykPlot_traj(this.responseDataSatellite, constel);
+        skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
+      }
     }
   }
 }

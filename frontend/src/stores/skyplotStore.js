@@ -24,6 +24,7 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
         chart: {
           polar: true,
           //type: 'scatter'
+          marginTop: 100
         },
         title: {
           text: 'Skyplot'
@@ -177,7 +178,7 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
                 data: data_constellation[constel][sat],
                 lineWidth: 1,
                 marker: {
-                  enabled: true
+                  enabled: false
                 }
               });
             }

@@ -187,10 +187,10 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
       }
     },
 
-    drawSatsOnSykPlot(dataSatJSON) {
+    drawSatsOnSykPlot(dataSatJSON, constellation_user) {
         const seriesData = dataSatJSON.reduce((acc, sat) => {
             if (!acc[sat.constellation]) {
-            acc[sat.constellation] = [];
+                acc[sat.constellation] = [];
             }
             acc[sat.constellation].push([sat.azimut, sat.elevation]);
             return acc;
@@ -198,17 +198,19 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
 
         // Supposons que `this.chart` est votre instance Highcharts
         for (const constellation in seriesData) {
-            if (this.chart) {
-            this.chart.addSeries({
-                name: constellation,
-                type: 'scatter',
-                color: colorsSats[constellation],
-                data: seriesData[constellation],
-                marker: {
-                  symbol: 'circle'
-                }
-            });
-            }
+          if (constellation === constellation_user){
+              if (this.chart) {
+                this.chart.addSeries({
+                  name: constellation,
+                  type: 'scatter',
+                  color: colorsSats[constellation],
+                  data: seriesData[constellation],
+                  marker: {
+                    symbol: 'circle'
+                  }
+                });
+              }
+          }
         }
     },
   }

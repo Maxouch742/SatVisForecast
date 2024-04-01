@@ -321,13 +321,12 @@ export default {
       // ---------------
       const dataTopoMask = await this.getTopography(JSONrequest);
       this.responseDataMask = dataTopoMask;
-      console.log(dataTopoMask);
 
       // SATELITTE SCATTER 
       // -----------------
       const dataSatellite = await this.getSatelittes(JSONrequest);
       this.responseDataSatellite = dataSatellite;
-      //const dataSatellite_last = dataSatellite.slice(-1);
+      const dataSatellite_last = dataSatellite.slice(-1);
 
 
       // PLOT ELEMENTS ON POLAR CHARTS
@@ -335,7 +334,7 @@ export default {
       const listAziElevOfRelief = await this.responseToListsAziElev(dataTopoMask);
       const skyPlotStore = useSkyPlotStore(); // get the stored chart first
       skyPlotStore.removeAllSeries(); // delete existing data first
-      //skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data);
+      skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data, constellation_user);
       skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite, constellation_user);
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
       skyPlotStore.drawMaskElevetionOnSkyPlot(this.elevationMask);
@@ -373,6 +372,7 @@ export default {
         const listAziElevOfRelief = await this.responseToListsAziElev(this.responseDataMask);
         const skyPlotStore = useSkyPlotStore(); // get the stored chart first
         skyPlotStore.removeAllSeries(); // delete existing data first
+        skyPlotStore.drawSatsOnSykPlot(this.responseDataSatellite.slice(-1)[0].data, constel);
         skyPlotStore.drawSatsOnSykPlot_traj(this.responseDataSatellite, constel);
         skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
       }

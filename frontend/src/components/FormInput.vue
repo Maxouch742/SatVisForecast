@@ -350,6 +350,17 @@ export default {
 
       if (this.responseDataMask === null && this.responseDataSatellite === null) {
         alert("first click on 'Get GNSS visibility'");
+
+        // Set radiobutton 'all'
+        const input = document.getElementsByName('constellation');
+        for (let i = 0; i < input.length; i++) {
+          if (input[i].value == "ALL") {
+            input[i].checked = true
+          } else {
+            input[i].checked = false
+          }
+        }
+
       } else {
 
         //Get radioButton checked

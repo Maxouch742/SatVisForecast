@@ -57,7 +57,11 @@
         <div class="field">
           <div class="control">
             <label class="radio">
-              <input type="radio" name="constellation" value="GPS" @click="addConstellation" checked />
+              <input type="radio" name="constellation" value="ALL" @click="addConstellation" checked />
+              ALL
+            </label>
+            <label class="radio">
+              <input type="radio" name="constellation" value="GPS" @click="addConstellation" />
               GPS
             </label>
             <label class="radio">
@@ -301,17 +305,6 @@ export default {
         'datetime': this.datetime
       };
 
-      // ===============================
-      // === Get radioButton checked ===
-      // ===============================
-      const input = document.getElementsByName('constellation');
-      let constellation_user = 0;
-      for (let i = 0; i < input.length; i++) {
-        if (input[i].checked) {
-          constellation_user = input[i].value;
-        }
-      }
-
       // ==============================
       // === DRAW THE POLAR SKYPLOT ===
       // ==============================
@@ -334,8 +327,8 @@ export default {
       const listAziElevOfRelief = await this.responseToListsAziElev(dataTopoMask);
       const skyPlotStore = useSkyPlotStore(); // get the stored chart first
       skyPlotStore.removeAllSeries(); // delete existing data first
-      skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data, constellation_user);
-      skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite, constellation_user);
+      skyPlotStore.drawSatsOnSykPlot(dataSatellite_last[0].data, "ALL");
+      //skyPlotStore.drawSatsOnSykPlot_traj(dataSatellite, constellation_user);
       skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
       skyPlotStore.drawMaskElevetionOnSkyPlot(this.elevationMask);
 
@@ -375,6 +368,7 @@ export default {
         skyPlotStore.drawSatsOnSykPlot(this.responseDataSatellite.slice(-1)[0].data, constel);
         skyPlotStore.drawSatsOnSykPlot_traj(this.responseDataSatellite, constel);
         skyPlotStore.drawReliefOnSkyPlot(listAziElevOfRelief);
+        skyPlotStore.drawMaskElevetionOnSkyPlot(this.elevationMask);
       }
     }
   }

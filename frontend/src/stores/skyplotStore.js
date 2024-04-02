@@ -221,7 +221,7 @@ export const useSkyPlotStore = defineStore('skyPlotStore', {
 
         // Supposons que `this.chart` est votre instance Highcharts
         for (const constellation in seriesData) {
-          if (constellation === constellation_user){
+          if (constellation === constellation_user || constellation_user === "ALL"){
               if (this.chart) {
                 this.chart.addSeries({
                   name: constellation,

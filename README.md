@@ -23,6 +23,7 @@ L'outils **SatVisForecast** permet de fournir une analyse des satellites visible
 Les résultats de l'analyse sont:
 - Plot du ciel avec les satelittes (temps demandé avec trace de 6h dans le futur), le masque du terrain local et le masque d'élévation général
 - Carte 2D avec emprise du masque du terrain lcoal (ex: crêtes de montagnes)
+- Sélection de constellations GNSS spécifiques (ou toutes)
 
 ![Exemple de génération](images/exemple.png)
 

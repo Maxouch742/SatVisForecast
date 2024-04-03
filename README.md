@@ -12,7 +12,7 @@ The rest of the report is written in French for ease of use.
 
 ## Description 
 
-L'outil permet de fournir les satelites visibles depuis un point donné en Suisse. Le masque du relief local est généré automatiquement à partir du modèle 3D altimétrique de Swisstopo (API). Cela permet de tenir compte de la topographie locale de chaque lieu pour une analyse pertinente du potentiel GNSS, notamment dans les régions à fort masques (vallées, etc.).
+L'outils **SatVisForecast** permet de fournir une analyse des satellites visibles depuis un point donné en Suisse. Le masque du relief local est généré automatiquement à partir du modèle 3D altimétrique de Swisstopo (API). Cela permet de tenir compte de la topographie locale de chaque lieu pour une analyse pertinente du potentiel GNSS à un temps donné. L'exemple le plus courant se retrouve dans les régions à fort masques topographiques (vallées étroites, etc.).
 
  **Les paramètres de calcul sont les suivants :**
 - Position : Est, Nord (MN95) -> à cliquer sur la carte

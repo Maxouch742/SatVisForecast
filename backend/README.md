@@ -1,8 +1,10 @@
 # Génération automatique d'un masque d'élévation avec Python
 Le but du script est de générer de manière automatique un masque azimuth-élévation depuis un geotiff et une coordonnée définie au préalable.
 Le code retourne un JSON avec les azimuths, élévations et coordonnées des élévations maximales.
+La totalité du programme est crée avec python.
 
 ## Information préalable
+Utiliser la version de python en 3.9 pas plus récent, problème de compatibilité avec les extensions.
 ### Extensions utiles
 ```python
 import numpy as np

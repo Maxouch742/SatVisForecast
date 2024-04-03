@@ -8,10 +8,10 @@ Utiliser la version de python en 3.9 pas plus récent, problème de compatibilit
 ### Extensions utiles
 ```python
 import numpy as np
-from osgeo import gdal,gdalconst,osr
+from osgeo import gdal, gdalconst, osr
 from fastapi import FastAPI
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import FUNCTION as mo
 ```
 Les functions utiles sont dans le fichier `FUNTION.py` et appelées dans le code comme `mo`.
@@ -79,4 +79,8 @@ polarcoordinate.append(coopolar)
 Analyse de la table de coordonnée polaire et extraction avec un pas de 1 degré l'élévation maximale autour du point à analyser.
 Stockage des informations dans une nouvelle liste uniquement avec les valeurs maximums.
 ### 5. Résultats
+<<<<<<< Updated upstream
 La nouvelle liste est retournée à la requette pour exploitation.
+=======
+La nouvelle liste est retournée à la requête pour exploitation.
+>>>>>>> Stashed changes

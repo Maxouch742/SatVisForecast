@@ -15,7 +15,7 @@ The rest of the report is written in French for ease of use.
 L'outil permet de fournir les satelites visibles depuis un point donné en Suisse. Le masque du relief local est généré automatiquement à partir du modèle 3D altimétrique de Swisstopo (API). Cela permet de tenir compte de la topographie locale de chaque lieu pour une analyse pertinente du potentiel GNSS, notamment dans les régions à fort masques (vallées, etc.).
 
  **Les paramètres de calcul sont les suivants :**
-- Position : E,N -> à cliquer sur la carte
+- Position : Est, Nord (MN95) -> à cliquer sur la carte
 - Hauteur de l'instrument
 - Mask d'élévation minimum
 - Date et heure pour l'analyse des satellites

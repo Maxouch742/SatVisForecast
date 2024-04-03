@@ -18,7 +18,7 @@ L'outils **SatVisForecast** permet de fournir une analyse des satellites visible
 - Position : Est, Nord (MN95) -> à cliquer sur la carte
 - Hauteur de l'instrument
 - Mask d'élévation minimum
-- Date et heure pour l'analyse des satellites
+- Date et heure pour l'analyse (passé, présent et futur)
 
 Les résultats de l'analyse sont:
 - Plot du ciel avec les satelittes (temps demandé avec trace de 6h dans le futur), le masque du terrain local et le masque d'élévation général

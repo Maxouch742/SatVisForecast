@@ -27,6 +27,8 @@ Les résultats de l'analyse sont:
 ![Exemple de génération](images/exemple.png)
 
 ## Détails techniques
+### Workframe (fontend)
+VueJS
 
 ### API utilisées
 

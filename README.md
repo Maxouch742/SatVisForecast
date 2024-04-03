@@ -48,7 +48,7 @@ Les profils sont générés sur 8km avec 1'000 points soit un point tous les 8m.
 ## Installation du projet (mode: développeur)
 1. Clone/fork le projet sur votre laptop:
 ```
-git clone ...
+git clone https://github.com/Maxouch742/SatVisForecast.git
 ```
 2. Installation des dépendances (si vous n'avez pas NodeJS, il faut préalablement l'installer) :
 ```

@@ -2,6 +2,7 @@
 Le but du script est de générer de manière automatique un masque azimuth-élévation depuis un geotiff et une coordonnée définie au préalable.
 Le code retourne un JSON avec les azimuths, élévations et coordonnées des élévations maximales.
 La totalité du programme est crée avec python.
+Cependant, cette partie ```backend``` n'est pas utilisée dans la web-app SatVisForecast.
 
 ## Information préalable
 Utiliser la version de python en 3.9 pas plus récent, problème de compatibilité avec les extensions.
@@ -79,8 +80,4 @@ polarcoordinate.append(coopolar)
 Analyse de la table de coordonnée polaire et extraction avec un pas de 1 degré l'élévation maximale autour du point à analyser.
 Stockage des informations dans une nouvelle liste uniquement avec les valeurs maximums.
 ### 5. Résultats
-<<<<<<< Updated upstream
-La nouvelle liste est retournée à la requette pour exploitation.
-=======
 La nouvelle liste est retournée à la requête pour exploitation.
->>>>>>> Stashed changes

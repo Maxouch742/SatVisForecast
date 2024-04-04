@@ -23,7 +23,7 @@ The rest of the report is written in French for ease of use.
   - [Licence (EN)](#licence-en)
 
 ## Description 
-L'outil **SatVisForecast** permet de fournir une analyse des satellites visibles depuis un point donné en Suisse. Le masque du relief local est généré automatiquement à partir du modèle 3D altimétrique de swisstopo (MNT25) grâce à une API. Cela permet de tenir compte de la topographie locale de chaque lieu pour une analyse pertinente du potentiel GNSS à un temps donné. L'exemple le plus courant se retrouve dans les régions à fort masques topographiques (vallées étroites, etc.).
+L'outil **SatVisForecast** permet de fournir une analyse des satellites visibles depuis un point donné en Suisse. Le masque du relief local est généré automatiquement à partir du modèle 3D altimétrique de swisstopo (SwissAlti3D) grâce à une API. Cela permet de tenir compte de la topographie locale de chaque lieu pour une analyse pertinente du potentiel GNSS à un temps donné. L'exemple le plus courant se retrouve dans les régions à fort masques topographiques (vallées étroites, etc.).
 
  **Les paramètres de calcul sont les suivants :**
 - Position : Est, Nord (MN95) -> à cliquer sur la carte
@@ -56,7 +56,6 @@ La requête est effectuée : [https://celestrak.org/NORAD/elements/gp.php?GROUP=
 ```
 
 Ensuite, grâce à la librairie [satellite-js](https://github.com/shashwatak/satellite-js/tree/release), il est ainsi possible d'obtenir les coordonnées du satellite à l'heure souhaitée par l'utilisateur (ainsi que 6h après cette dernière).
-
 
 #### 2. api3.geo.admin 
 Lien : https://api3.geo.admin.ch/services/sdiservices.html 

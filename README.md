@@ -39,22 +39,22 @@ L'outil **SatVisForecast** permet de fournir une analyse des satellites visibles
 ![Exemple de génération](images/exemple.png)
 
 ## Détails techniques
-### Workframe (fontend)
+### Workframe (frontend)
 VueJS
 
 ### API utilisées
 
 #### 1. Celestrak
 ![Logo de Celestrak](images/celestrak.png)
-[Celestrak](https://celestrak.org) est un site internet et une API réputés, utilisé dans de nombreux domaines open-sources permettant d'assurer un suivi des objets spatiaux en orbite autour de la Terre (Station Spatiale Internationale, satellites GNSS et autres, ...).
+[Celestrak](https://celestrak.org) est un site internet et une API réputées, utilisé dans de nombreux domaines open-source permettant d'assurer un suivi des objets spatiaux en orbite autour de la Terre (Station Spatiale Internationale, satellites GNSS et autres, ...).
 
-Nous faisons la requête suivante : [https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON](https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON) pour obtenir la définition des orbites des satellites, appelés aussi `TLe` pour *Two Line element*. La définition d'orbite d'un satellite que l'on reçoit pour un satellite est la suivante (pour le satellite `NAVSTAR 43 (USA 132)`) :
+La requête est effectuée : [https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON](https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON) pour obtenir la définition des orbites des satellites, appelés aussi `TLe` pour *Two Line element*. La définition d'orbite que l'on reçoit pour un satellite est la suivante (ex: `NAVSTAR 43 (USA 132)`) :
 ```  
 1 24876U 97035A   24094.49153709  .00000063  00000+0  00000+0 0  9995
 2 24876  55.6452 130.0512 0076929  52.0260 308.7395  2.00565460195813
 ```
 
-Ensuite, grâce à la librairie [satellite-js](https://github.com/shashwatak/satellite-js/tree/release), il est ainsi possible d'obtenir les coordonnées du satellite à l'heure souhaitée par l'utilisateur.
+Ensuite, grâce à la librairie [satellite-js](https://github.com/shashwatak/satellite-js/tree/release), il est ainsi possible d'obtenir les coordonnées du satellite à l'heure souhaitée par l'utilisateur (ainsi que 6h après cette dernière).
 
 
 #### 2. api3.geo.admin 

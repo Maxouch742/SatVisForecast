@@ -1,5 +1,3 @@
-# SatVisForecast
-
 ![Logo SatVisForecast](images/logo_big_satvisforecast.svg)
 
 This application prototype was created as part of the "MDT - GIO 2024" course. 

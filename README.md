@@ -1,4 +1,4 @@
-![Logo SatVisForecast](images/logo_big_satvisforecast.svg)
+<img src="images/logo_big_satvisforecast.svg" alt="Logo SatVisForecast" width="500">
 
 This application prototype was created as part of the "MDT - GIO 2024" course. 
 The aim of the web-app is to ge the potential GNSS visibility according to local terrain.
@@ -45,7 +45,8 @@ VueJS
 ### API utilisées
 
 #### 1. Celestrak
-![Logo de Celestrak](images/celestrak.png)
+<img src="images/celestrak_gray.png" alt="Logo de Celestrak" width="500">
+
 [Celestrak](https://celestrak.org) est un site internet et une API réputées, utilisé dans de nombreux domaines open-source permettant d'assurer un suivi des objets spatiaux en orbite autour de la Terre (Station Spatiale Internationale, satellites GNSS et autres, ...).
 
 La requête est effectuée : [https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON](https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON) pour obtenir la définition des orbites des satellites, appelés aussi `TLe` pour *Two Line element*. La définition d'orbite que l'on reçoit pour un satellite est la suivante (ex: `NAVSTAR 43 (USA 132)`) :
@@ -96,7 +97,6 @@ App running at:
 - Local:   http://localhost:xxxx/ 
 - Network: http://192.168.10.153:xxxx/
 ``` 
-
 
 ## Licence (EN)
 Copyright (c) 2024 HES-SO, MSc in geomatics engineering

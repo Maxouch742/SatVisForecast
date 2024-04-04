@@ -1,6 +1,6 @@
 # SatVisForecast
 
-![Logo SatVisForecast](logo_big_satvisforecast.svg)
+![Logo SatVisForecast](images/logo_big_satvisforecast.svg)
 
 This application prototype was created as part of the "MDT - GIO 2024" course. 
 The aim of the web-app is to ge the potential GNSS visibility according to local terrain.

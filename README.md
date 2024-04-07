@@ -47,15 +47,15 @@ VueJS
 #### 1. Celestrak
 <img src="images/celestrak_gray.png" alt="Logo de Celestrak" width="500">
 
-[Celestrak](https://celestrak.org) est un site internet et une API réputées, utilisé dans de nombreux domaines open-source permettant d'assurer un suivi des objets spatiaux en orbite autour de la Terre (Station Spatiale Internationale, satellites GNSS et autres, ...).
+[Celestrak](https://celestrak.org) est un site internet et une API réputées, et qui sont utilisés dans de nombreux domaines open-source permettant d'assurer un suivi des objets spatiaux en orbite autour de la Terre (Station Spatiale Internationale, satellites GNSS, ...).
 
-La requête est effectuée : [https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON](https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON) pour obtenir la définition des orbites des satellites, appelés aussi `TLe` pour *Two Line element*. La définition d'orbite que l'on reçoit pour un satellite est la suivante (ex: `NAVSTAR 43 (USA 132)`) :
+La requête effectuée est : [https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON](https://celestrak.org/NORAD/elements/gp.php?GROUP=GNSS&FORMAT=JSON) pour obtenir la définition des orbites des satellites, appelés aussi `TLe` pour *Two Line element*. La définition d'orbite que l'on reçoit pour un satellite est la suivante (ex: `NAVSTAR 43 (USA 132)`) :
 ```  
 1 24876U 97035A   24094.49153709  .00000063  00000+0  00000+0 0  9995
 2 24876  55.6452 130.0512 0076929  52.0260 308.7395  2.00565460195813
 ```
 
-Ensuite, grâce à la librairie [satellite-js](https://github.com/shashwatak/satellite-js/tree/release), il est ainsi possible d'obtenir les coordonnées du satellite à l'heure souhaitée par l'utilisateur (ainsi que 6h après cette dernière).
+Ensuite, grâce à la librairie [satellite-js](https://github.com/shashwatak/satellite-js/tree/release), il est ainsi possible d'obtenir les coordonnées du satellite à l'heure souhaitée par l'utilisateur (ainsi que 6h après cette dernière car nous avons paramétré la boucle sur une itération de maximum 6 heures).
 
 #### 2. api3.geo.admin 
 Lien : https://api3.geo.admin.ch/services/sdiservices.html 
@@ -66,10 +66,10 @@ Utilisation de la partie génération automatique de profil. Permet de générer
 Les profils sont générés sur 8km avec 1'000 points soit un point tous les 8m.
 
 #### 3. reframe
-[satellite-js](https://github.com/shashwatak/satellite-js/tree/release) a besoin de la position WGS84 du récepteur où l'utilisateur veut travailer.
+[satellite-js](https://github.com/shashwatak/satellite-js/tree/release) a besoin de la position WGS84 du récepteur où l'utilisateur veut travailler.
 
 Les données de bases sont la position `(Est, Nord)` dans le système global suisse `MN95`. 
-Par conséquent, nous utilisons l'api de swisstopo [reframe](https://www.swisstopo.admin.ch/fr/rest-api-geodesique-reframe-web) pour passer du système global `MN95`au système global internationale `WGS84`.
+Par conséquent, nous utilisons l'api de swisstopo [reframe](https://www.swisstopo.admin.ch/fr/rest-api-geodesique-reframe-web) pour passer du système global suisse `MN95` au système global internationale `WGS84`.
 
 Les transformations de coordonnées sont, dans l'ordre :
 1. *LN02 to Bessel (ellipsoidal)* : `http://geodesy.geo.admin.ch/reframe/lhn95tobessel`

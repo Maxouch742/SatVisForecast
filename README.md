@@ -101,12 +101,15 @@ App running at:
 1. Être dans le dossier `frontend`
 2. Création de l'application NodeJS
 ```ps
+cd frontend
 npm run build
 ```
 3. Push and publish le dossier `dist` créé
 ```ps
 cd ..
-git add frontend/dist && git commit -m 'adding dist subtree'
+git add .
+git commit -m "add production folder"
+git push
 git subtree push --prefix frontend/dist origin gh-pages
 ```
 

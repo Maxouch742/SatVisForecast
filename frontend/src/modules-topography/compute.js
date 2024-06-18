@@ -119,8 +119,7 @@ export function maxElevation(data){
         const max_elevation = Math.max(...list_elevation);
 
         let obser_max_elevation;
-
-        // TODO:      
+     
         if ( max_elevation === 0.0){
 
             // Take a value in a profile just for the orientation

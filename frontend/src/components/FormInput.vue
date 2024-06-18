@@ -197,6 +197,8 @@ export default {
           "height_NF02": JSONrequest.H
         };
 
+        //TODO: vérifier la conversion des données de MN95/NF02 vers WGS84
+
         // Compute position WGS84 from MN95 position
         const height_bessel = await nf02ToBessel(obs_position.east, obs_position.north, obs_position.height_NF02);
 

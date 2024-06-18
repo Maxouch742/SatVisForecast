@@ -11,16 +11,16 @@ SatVisForecast was developped by a team of 3 people:
 The rest of the report is written in French for ease of use.
 
 **Table of contents:**
-- [SatVisForecast](#satvisforecast)
-  - [Description](#description)
-  - [Détails techniques](#détails-techniques)
-    - [Workframe (fontend)](#workframe-fontend)
-    - [API utilisées](#api-utilisées)
-      - [1. Celestrak](#1-celestrak)
-      - [2. api3.geo.admin](#2-api3geoadmin)
-      - [3. reframe](#3-reframe)
-  - [Installation du projet (mode: développeur)](#installation-du-projet-mode-développeur)
-  - [Licence (EN)](#licence-en)
+- [Description](#description)
+- [Détails techniques](#détails-techniques)
+  - [Workframe (frontend)](#workframe-frontend)
+  - [API utilisées](#api-utilisées)
+    - [1. Celestrak](#1-celestrak)
+    - [2. api3.geo.admin](#2-api3geoadmin)
+    - [3. reframe](#3-reframe)
+- [Installation du projet (mode: développeur)](#installation-du-projet-mode-développeur)
+- [Publication du projet sur GitHub Pages](#publication-du-projet-sur-github-pages)
+- [Licence (EN)](#licence-en)
 
 ## Description 
 L'outil **SatVisForecast** permet de fournir une analyse des satellites visibles depuis un point donné en Suisse. Le masque du relief local est généré automatiquement à partir du modèle 3D altimétrique de swisstopo (SwissAlti3D) grâce à une API. Cela permet de tenir compte de la topographie locale de chaque lieu pour une analyse pertinente du potentiel GNSS à un temps donné. L'exemple le plus courant se retrouve dans les régions à fort masques topographiques (vallées étroites, etc.).
@@ -96,6 +96,19 @@ App running at:
 - Local:   http://localhost:xxxx/ 
 - Network: http://192.168.10.153:xxxx/
 ``` 
+
+## Publication du projet sur GitHub Pages
+1. Être dans le dossier `frontend`
+2. Création de l'application NodeJS
+```ps
+npm run build
+```
+3. Push and publish le dossier `dist` créé
+```ps
+cd ..
+git add frontend/dist && git commit -m 'adding dist subtree'
+git subtree push --prefix frontend/dist origin gh-pages
+```
 
 ## Licence (EN)
 Copyright (c) 2024 HES-SO, MSc in geomatics engineering

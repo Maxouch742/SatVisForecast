@@ -5,8 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "deploy": "vue-cli-service build && gh-pages -d dist"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "bulma": "^0.9.4",
